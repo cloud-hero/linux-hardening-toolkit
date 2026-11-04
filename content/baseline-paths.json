@@ -1,0 +1,16 @@
+[
+  "/etc/ssh/sshd_config",
+  "/etc/ssh/sshd_config.d",
+  "/etc/apt",
+  "/etc/systemd/journald.conf",
+  "/etc/systemd/journald.conf.d",
+  "/etc/audit/rules.d",
+  "/etc/audit/auditd.conf",
+  "/etc/ufw",
+  "/etc/default/ufw",
+  "/etc/sudoers",
+  "/etc/sudoers.d",
+  "/etc/rsyslog.conf",
+  "/etc/rsyslog.d",
+  "/etc/systemd/system"
+]

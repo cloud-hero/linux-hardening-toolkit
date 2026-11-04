@@ -1,0 +1,39 @@
+PASS | SSH permitrootlogin no
+PASS | SSH passwordauthentication no
+PASS | SSH kbdinteractiveauthentication no
+PASS | SSH pubkeyauthentication yes
+PASS | SSH allowtcpforwarding no
+PASS | Invalid SSH configuration rejected before reload
+PASS | Audit rules loaded; lost event counter is zero
+/etc/ssh/sshd_config: OK
+/etc/ssh/sshd_config.d/00-cloudhero.conf: OK
+/etc/apt/apt.conf.d/20auto-upgrades: OK
+/etc/apt/apt.conf.d/52cloudhero-reboot: OK
+/etc/systemd/journald.conf.d/60-cloudhero.conf: OK
+/etc/audit/rules.d/50-cloudhero.rules: OK
+/etc/ufw/user.rules: OK
+/etc/ufw/user6.rules: OK
+PASS | Approved file hashes match
+PASS | Deliberate SSH configuration drift detected
+/etc/ssh/sshd_config: OK
+/etc/ssh/sshd_config.d/00-cloudhero.conf: OK
+/etc/apt/apt.conf.d/20auto-upgrades: OK
+/etc/apt/apt.conf.d/52cloudhero-reboot: OK
+/etc/systemd/journald.conf.d/60-cloudhero.conf: OK
+/etc/audit/rules.d/50-cloudhero.rules: OK
+/etc/ufw/user.rules: OK
+/etc/ufw/user6.rules: OK
+PASS | Restored configuration matches original baseline
+PASS | SSH configuration write produced a retrievable audit event
+PASS | Both APT timers enabled
+APT::Periodic::Unattended-Upgrade "1";
+Unattended-Upgrade::Automatic-Reboot "false";
+PASS | Daily automatic security updates configured; automatic reboot disabled
+PASS | Host firewall active
+PASS | IPv4 approved SSH: 198.18.0.2 -> 198.18.0.1:22: connected
+PASS | IPv4 unapproved SSH: 198.18.0.3 -> 198.18.0.1:22: timed out (filtered)
+PASS | IPv6 approved SSH: fd42:face::2 -> fd42:face::1:22: connected
+PASS | IPv6 unapproved SSH: fd42:face::3 -> fd42:face::1:22: timed out (filtered)
+PASS | IPv4 and IPv6 allowed/denied ingress tests complete
+PASS | No failed systemd units or dpkg audit findings
+All scripted lab assertions passed.

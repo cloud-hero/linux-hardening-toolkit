@@ -1,0 +1,5 @@
+ * Rotating audit daemon logs auditd
+   ...done.
+PASS | audit rotation created a new active file and retained earlier event
+PASS | post-rotation event written; kernel audit lost counter remains zero
+MANUAL | disk-exhaustion behavior and production notification delivery are not proven by rotation

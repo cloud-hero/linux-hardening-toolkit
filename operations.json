@@ -1,0 +1,51 @@
+[
+  {
+    "group": "SSH",
+    "area": "SSH access",
+    "owner": "Identity owner",
+    "cadence": "After access changes; monthly access review",
+    "executor": "Platform engineer"
+  },
+  {
+    "group": "PATCH",
+    "area": "Patch management",
+    "owner": "Platform owner",
+    "cadence": "Daily update/failure review; on every relevant advisory",
+    "executor": "Platform engineer; security triage analyst"
+  },
+  {
+    "group": "KERN",
+    "area": "Kernel lifecycle",
+    "owner": "Platform owner",
+    "cadence": "After kernel change/reboot; monthly support review",
+    "executor": "Platform engineer; application verifier"
+  },
+  {
+    "group": "NET",
+    "area": "Firewall exposure",
+    "owner": "Network owner",
+    "cadence": "After network changes; daily exposure drift monitoring",
+    "executor": "Network engineer; service engineer"
+  },
+  {
+    "group": "AUD",
+    "area": "Audit and logging",
+    "owner": "Security operations owner",
+    "cadence": "Continuous pipeline monitoring; monthly delivery exercise",
+    "executor": "Observability engineer; on-call responder"
+  },
+  {
+    "group": "DRIFT",
+    "area": "Configuration drift",
+    "owner": "Configuration owner",
+    "cadence": "After changes; daily comparison",
+    "executor": "Configuration engineer; service engineer"
+  },
+  {
+    "group": "VERIFY",
+    "area": "Production verification",
+    "owner": "Service owner",
+    "cadence": "Every rollout and reboot; periodic recovery exercise",
+    "executor": "Platform engineer; application verifier"
+  }
+]

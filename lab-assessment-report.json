@@ -1,0 +1,401 @@
+{
+  "baseline_version": "LH-1.2",
+  "target": "lima-hardening (disposable Ubuntu 24.04.5 LTS ARM64)",
+  "evidence_scope": "Production control catalogue evaluated against bounded lab evidence; PASS applies only to the stated VM scope. No production environment or specific CVE is certified.",
+  "assessed_at": "2026-11-04T13:29:32Z",
+  "checks": [
+    {
+      "id": "SSH-01",
+      "status": "MANUAL",
+      "rationale": "The lab enforces key-only authentication and denies root. Production identities, every Match context and approved authentication policy are not supplied.",
+      "evidence": [
+        {
+          "source": "evidence/v3/core-final.txt",
+          "observed_at": "2026-11-04T13:28:41Z",
+          "observation": "The lab enforces key-only authentication and denies root. Production identities, every Match context and approved authentication policy are not supplied.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "SSH-02",
+      "status": "MANUAL",
+      "rationale": "No organization identity ownership, privilege review or key/CA lifecycle record is supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "SSH-03",
+      "status": "PASS",
+      "rationale": "Fresh pinned non-multiplexed SSH login succeeded; the existing approved lab automation role ran its exact privileged command. Root/password-only authentication was rejected. Separate disposable roles demonstrated password-required authentication and restricted noninteractive sudo without widening existing privileges.",
+      "evidence": [
+        {
+          "source": "evidence/v3/ssh-final.txt",
+          "observed_at": "2026-11-04T13:28:33Z",
+          "observation": "Fresh pinned non-multiplexed SSH login succeeded; the existing approved lab automation role ran its exact privileged command. Root/password-only authentication was rejected. Separate disposable roles demonstrated password-required authentication and restricted noninteractive sudo without widening existing privileges.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        },
+        {
+          "source": "evidence/v3/sudo-role-validation.txt",
+          "observed_at": "2026-11-04T13:23:41Z",
+          "observation": "Password-required and restricted automation role assertions passed; temporary identities and policy removed.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "SSH-04",
+      "status": "MANUAL",
+      "rationale": "VM management recovery exists, but an approved console/revocation exercise and organizational recovery objective are absent.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "PATCH-01",
+      "status": "MANUAL",
+      "rationale": "Signed Ubuntu repositories were refreshed successfully. Complete third-party coverage, support entitlement and update-owner records remain required.",
+      "evidence": [
+        {
+          "source": "evidence/v2/logging-prerequisites.txt",
+          "observed_at": "2026-11-03T21:09:24Z",
+          "observation": "Signed Ubuntu repositories were refreshed successfully. Complete third-party coverage, support entitlement and update-owner records remain required.",
+          "method": "Retained operator-run lab transcript; timestamp is artifact capture time. Embedded guest times take precedence."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "PATCH-02",
+      "status": "MANUAL",
+      "rationale": "Both simulations and holds are collected, and a strict refresh succeeded. No organization metadata-age policy is supplied; dated results cannot establish current fleet exposure.",
+      "evidence": [
+        {
+          "source": "evidence/v3/collector-final.txt",
+          "observed_at": "2026-11-04T13:26:28Z",
+          "observation": "Both simulations and holds are collected, and a strict refresh succeeded. No organization metadata-age policy is supplied; dated results cannot establish current fleet exposure.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "PATCH-03",
+      "status": "MANUAL",
+      "rationale": "APT timers and effective unattended/reboot policy are present, with observed successful lab upgrades. Patch-failure alert receipt and approved production execution policy are missing.",
+      "evidence": [
+        {
+          "source": "evidence/v3/collector-final.txt",
+          "observed_at": "2026-11-04T13:26:28Z",
+          "observation": "APT timers and effective unattended/reboot policy are present, with observed successful lab upgrades. Patch-failure alert receipt and approved production execution policy are missing.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "PATCH-04",
+      "status": "MANUAL",
+      "rationale": "No current CVE inventory, assigned remediation deadlines or exception register is supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "KERN-01",
+      "status": "MANUAL",
+      "rationale": "Installed virtual/generic kernel packages and boot capacity were collected. The organization-approved support track and transaction capacity policy are not supplied.",
+      "evidence": [
+        {
+          "source": "evidence/v3/collector-final.txt",
+          "observed_at": "2026-11-04T13:26:28Z",
+          "observation": "Installed virtual/generic kernel packages and boot capacity were collected. The organization-approved support track and transaction capacity policy are not supplied.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "KERN-02",
+      "status": "MANUAL",
+      "rationale": "The patched lab boot returns to 6.8.0-147-generic and the one-time GRUB selection is cleared. No specific vendor CVE/fixed-version claim is assessed.",
+      "evidence": [
+        {
+          "source": "evidence/v2/restored-patched-kernel.txt",
+          "observed_at": "2026-11-03T21:21:24Z",
+          "observation": "The patched lab boot returns to 6.8.0-147-generic and the one-time GRUB selection is cleared. No specific vendor CVE/fixed-version claim is assessed.",
+          "method": "Retained operator-run lab transcript; timestamp is artifact capture time. Embedded guest times take precedence."
+        },
+        {
+          "source": "evidence/v3/grub-menu.txt",
+          "observed_at": "2026-11-04T13:28:41Z",
+          "observation": "Running kernel and generated submenu/title/image mapping retained; no CVE fixed-version claim inferred.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "KERN-03",
+      "status": "MANUAL",
+      "rationale": "A changed boot ID and the intended kernel prove reboot activation in the VM. Production drivers/workloads and maintenance deadlines are not established.",
+      "evidence": [
+        {
+          "source": "evidence/v2/restored-patched-kernel.txt",
+          "observed_at": "2026-11-03T21:21:24Z",
+          "observation": "A changed boot ID and the intended kernel prove reboot activation in the VM. Production drivers/workloads and maintenance deadlines are not established.",
+          "method": "Retained operator-run lab transcript; timestamp is artifact capture time. Embedded guest times take precedence."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "KERN-04",
+      "status": "MANUAL",
+      "rationale": "The retained 6.8.0-142 kernel actually booted, with no failed units, and a later reboot restored 147. Production recovery time, application recovery and vulnerability re-triage remain unverified.",
+      "evidence": [
+        {
+          "source": "evidence/v2/fallback-boot.txt",
+          "observed_at": "2026-11-03T21:20:42Z",
+          "observation": "The retained 6.8.0-142 kernel actually booted, with no failed units, and a later reboot restored 147. Production recovery time, application recovery and vulnerability re-triage remain unverified.",
+          "method": "Retained operator-run lab transcript; timestamp is artifact capture time. Embedded guest times take precedence."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "NET-01",
+      "status": "MANUAL",
+      "rationale": "Lab listeners were collected; there is no completed, owner-approved production exposure inventory.",
+      "evidence": [
+        {
+          "source": "evidence/v3/collector-final.txt",
+          "observed_at": "2026-11-04T13:26:28Z",
+          "observation": "Lab listeners were collected; there is no completed, owner-approved production exposure inventory.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "NET-02",
+      "status": "MANUAL",
+      "rationale": "UFW policy is active and management paths are restricted in the VM. Cloud, load-balancer and container policy evidence is absent.",
+      "evidence": [
+        {
+          "source": "evidence/v3/core-final.txt",
+          "observed_at": "2026-11-04T13:28:41Z",
+          "observation": "UFW policy is active and management paths are restricted in the VM. Cloud, load-balancer and container policy evidence is absent.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "NET-03",
+      "status": "MANUAL",
+      "rationale": "Separate namespace sources exercised allowed and denied TCP paths with live listeners over IPv4/IPv6. Internet vantage points and any deployed UDP services still require evidence.",
+      "evidence": [
+        {
+          "source": "evidence/application-network.txt",
+          "observed_at": "2026-11-03T17:24:21Z",
+          "observation": "Separate namespace sources exercised allowed and denied TCP paths with live listeners over IPv4/IPv6. Internet vantage points and any deployed UDP services still require evidence.",
+          "method": "Retained operator-run lab transcript; timestamp is artifact capture time. Embedded guest times take precedence."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "NET-04",
+      "status": "MANUAL",
+      "rationale": "Temporary firewall allowances were removed and exact prior files restored in the lab. Independent production recovery access and service restoration remain untested.",
+      "evidence": [
+        {
+          "source": "evidence/application-network.txt",
+          "observed_at": "2026-11-03T17:24:21Z",
+          "observation": "Temporary firewall allowances were removed and exact prior files restored in the lab. Independent production recovery access and service restoration remain untested.",
+          "method": "Retained operator-run lab transcript; timestamp is artifact capture time. Embedded guest times take precedence."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "AUD-01",
+      "status": "MANUAL",
+      "rationale": "Four narrow persistent SSH/sudo rules loaded and a controlled SSH write was retrievable. Full approved event coverage and authentication/privilege stream inventory are absent.",
+      "evidence": [
+        {
+          "source": "evidence/v3/core-final.txt",
+          "observed_at": "2026-11-04T13:28:41Z",
+          "observation": "Four narrow persistent SSH/sudo rules loaded and a controlled SSH write was retrievable. Full approved event coverage and authentication/privilege stream inventory are absent.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "AUD-02",
+      "status": "MANUAL",
+      "rationale": "Audit rotation retained the earlier event and recorded the new event with lost=0. Retention policy, disk/queue pressure alerts and failure-action exercise are still required.",
+      "evidence": [
+        {
+          "source": "evidence/v2/audit-rotation.txt",
+          "observed_at": "2026-11-03T21:18:55Z",
+          "observation": "Audit rotation retained the earlier event and recorded the new event with lost=0. Retention policy, disk/queue pressure alerts and failure-action exercise are still required.",
+          "method": "Retained operator-run lab transcript; timestamp is artifact capture time. Embedded guest times take precedence."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "AUD-03",
+      "status": "MANUAL",
+      "rationale": "Mutual-TLS syslog/audit delivery and wrong-peer rejection passed. After confirmed connection refusal, all 300 queued sequence IDs arrived with no missing IDs or duplicates. A real queue-pressure receipt reached the local fixture sink. Production receiver acceptance and notification evidence remain missing.",
+      "evidence": [
+        {
+          "source": "evidence/v3/logging-iteration-2.txt",
+          "observed_at": "2026-11-04T13:21:55Z",
+          "observation": "Mutual-TLS syslog/audit delivery and wrong-peer rejection passed. After confirmed connection refusal, all 300 queued sequence IDs arrived with no missing IDs or duplicates. A real queue-pressure receipt reached the local fixture sink. Production receiver acceptance and notification evidence remain missing.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "AUD-04",
+      "status": "MANUAL",
+      "rationale": "A human-acknowledged production alert and central access/retention policy are not supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "DRIFT-01",
+      "status": "MANUAL",
+      "rationale": "The lab manifest is local and root-writable. Independent approved artifact provenance and a production approver are not established.",
+      "evidence": [
+        {
+          "source": "evidence/v2/host-inventory.txt",
+          "observed_at": "2026-11-03T21:18:55Z",
+          "observation": "The lab manifest is local and root-writable. Independent approved artifact provenance and a production approver are not established.",
+          "method": "Retained operator-run lab transcript; timestamp is artifact capture time. Embedded guest times take precedence."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "DRIFT-02",
+      "status": "PASS",
+      "rationale": "The expanded approved lab scope matches 185 entries. Added APT/repository/journald/UFW/sudo/rsyslog overrides are detected and restoration passes; original content, owner/mode, symlink and atomic-write regressions remain supported.",
+      "evidence": [
+        {
+          "source": "evidence/v3/expanded-host-inventory.txt",
+          "observed_at": "2026-11-04T13:25:28Z",
+          "observation": "MATCH: 185 entries",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        },
+        {
+          "source": "evidence/v3/final-regressions.txt",
+          "observed_at": "2026-11-04T13:26:27Z",
+          "observation": "The expanded approved lab scope matches 185 entries. Added APT/repository/journald/UFW/sudo/rsyslog overrides are detected and restoration passes; original content, owner/mode, symlink and atomic-write regressions remain supported.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        },
+        {
+          "source": "evidence/v2/drift-regression.txt",
+          "observed_at": "2026-11-03T21:12:32Z",
+          "observation": "Underlying inventory negative cases and atomic preservation passed in the unchanged baseline tool.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "DRIFT-03",
+      "status": "MANUAL",
+      "rationale": "Runtime, service and package inventories were collected. No independent approved inventory and comparison is supplied.",
+      "evidence": [
+        {
+          "source": "evidence/v3/collector-final.txt",
+          "observed_at": "2026-11-04T13:26:28Z",
+          "observation": "Runtime, service and package inventories were collected. No independent approved inventory and comparison is supplied.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "DRIFT-04",
+      "status": "MANUAL",
+      "rationale": "Missing and unsupported input left the previous manifest byte-identical; no partial manifest remained. Production promotion approvals and expiring exception workflow remain unverified.",
+      "evidence": [
+        {
+          "source": "evidence/v2/drift-regression.txt",
+          "observed_at": "2026-11-03T21:12:32Z",
+          "observation": "Missing and unsupported input left the previous manifest byte-identical; no partial manifest remained. Production promotion approvals and expiring exception workflow remain unverified.",
+          "method": "Retained operator-run lab transcript; timestamp is artifact capture time. Embedded guest times take precedence."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "VERIFY-01",
+      "status": "MANUAL",
+      "rationale": "A worksheet and synthetic example are provided, but actual service owners, thresholds, dependencies and recovery objectives have not been approved.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "VERIFY-02",
+      "status": "PASS",
+      "rationale": "Within the VM scope, fresh access, intended kernel, package consistency, firewall/listener checks, critical units and local logging passed after reboot. Separate production network/detection controls remain open.",
+      "evidence": [
+        {
+          "source": "evidence/v3/core-final.txt",
+          "observed_at": "2026-11-04T13:28:41Z",
+          "observation": "Within the VM scope, fresh access, intended kernel, package consistency, firewall/listener checks, critical units and local logging passed after reboot. Separate production network/detection controls remain open.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        },
+        {
+          "source": "evidence/v3/collector-final.txt",
+          "observed_at": "2026-11-04T13:26:28Z",
+          "observation": "Supporting post-reboot OS collection and fresh admin authentication receipt.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        },
+        {
+          "source": "evidence/v3/ssh-final.txt",
+          "observed_at": "2026-11-04T13:28:33Z",
+          "observation": "Supporting post-reboot OS collection and fresh admin authentication receipt.",
+          "method": "Retained disposable-VM transcript; artifact capture time with embedded guest timestamps where supplied."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "VERIFY-03",
+      "status": "MANUAL",
+      "rationale": "A synthetic transaction detected a semantic failure despite HTTP 200 and passed after rollback. Real user transactions, jobs, dependencies and an observation window are not supplied.",
+      "evidence": [
+        {
+          "source": "evidence/v2/workload-gates.txt",
+          "observed_at": "2026-11-03T21:17:51Z",
+          "observation": "A synthetic transaction detected a semantic failure despite HTTP 200 and passed after rollback. Real user transactions, jobs, dependencies and an observation window are not supplied.",
+          "method": "Retained operator-run lab transcript; timestamp is artifact capture time. Embedded guest times take precedence."
+        }
+      ],
+      "exception": null
+    },
+    {
+      "id": "VERIFY-04",
+      "status": "MANUAL",
+      "rationale": "The synthetic gate held on failure and rollback restored the result. Production canary/staged rollout records and owner sign-off remain absent.",
+      "evidence": [
+        {
+          "source": "evidence/v2/workload-gates.txt",
+          "observed_at": "2026-11-03T21:17:51Z",
+          "observation": "The synthetic gate held on failure and rollback restored the result. Production canary/staged rollout records and owner sign-off remain absent.",
+          "method": "Retained operator-run lab transcript; timestamp is artifact capture time. Embedded guest times take precedence."
+        }
+      ],
+      "exception": null
+    }
+  ]
+}

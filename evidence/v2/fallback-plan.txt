@@ -1,0 +1,3 @@
+next_entry=Advanced options for Ubuntu>Ubuntu, with Linux 6.8.0-142-generic
+6.8.0-147-generic
+54588284-b8c7-4549-95c7-81fab5a51b56

@@ -1,0 +1,13 @@
+# Public toolkit distribution · LH-1.2
+
+This repository is the curated 70-file toolkit previously built and validated in the CloudHero Linux hardening workspace, with a public-facing README, relative Markdown links, publication notes, a validation entry point and checksums added for distribution. The tested collection, inventory, report and VM-fixture implementations are unchanged.
+
+The source website and VM runtime are not part of this repository. No VM disks, private keys, credentials, raw application logs, local browser screenshots or runtime state are included. Historical transcripts describe a disposable lab; usernames, private-range lab addresses, kernel versions and timestamps are lab observations, not production targets or current package recommendations.
+
+`evidence/source-sha256.txt` is the original build's historical source manifest. It includes builder files outside this curated distribution and is not a checksum list for the public repository. Root `SHA256SUMS` instead covers this published distribution, excluding itself. Release `SHA256SUMS` covers the downloadable ZIP, PDF and prompt. Hashes provide integrity checks, not independent author attestation.
+
+The PDF is the exact reviewed 27-page LH-1.2 artifact. Markdown download links are adjusted for browsing on GitHub; that does not alter operational guidance. Root tools and their `scripts/` copies must stay identical; the validation command checks this. The `content/` copies support the fixture tests, with relative links normalized for their directory.
+
+Historical review records describe the state at review time, including “no push or deployment” and the unavailable final interactive-browser recheck. Publishing this toolkit supersedes only that repository-publication status. It does not deploy the article to the CloudHero website or claim another browser/VM test run.
+
+Run `python3 scripts/validate-toolkit.py` before proposing a change. Regenerate checksums for an intentional release and rerun the disposable-VM exercises whenever executable hardening guidance changes. Keep customer evidence and collection outputs outside Git.

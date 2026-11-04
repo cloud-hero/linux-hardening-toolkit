@@ -1,0 +1,2 @@
+CREATED: 135 entries; approve and retain the manifest digest independently
+MATCH: 135 entries, including names/types/modes/owners/content

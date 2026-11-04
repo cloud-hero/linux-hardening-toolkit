@@ -1,0 +1,31 @@
+# Reviewed example for Ubuntu rsyslog with rsyslog-gnutls. Adapt paths/identity.
+# The service must be able to read certificates/audit logs and write its queue.
+# Keep AppArmor enforcing; use approved paths and any minimal reviewed local policy.
+# Merge with existing global/input settings; do not blindly duplicate modules.
+global(
+  DefaultNetstreamDriverCAFile="/etc/rsyslog.d/tls/ca.pem"
+  DefaultNetstreamDriverCertFile="/etc/rsyslog.d/tls/client.pem"
+  DefaultNetstreamDriverKeyFile="/etc/rsyslog.d/tls/client.key"
+)
+
+# Explicit audit ingestion, if this host does not already have an audit forwarder.
+# The effective service identity needs read permission; validate privilege dropping.
+# imfile state is kept under the existing rsyslog workDirectory.
+module(load="imfile")
+input(type="imfile" File="/var/log/audit/audit.log"
+      Tag="linux-audit:" Severity="info" Facility="local6"
+      PersistStateInterval="1")
+
+# Existing default local inputs supply authentication/privilege/syslog streams.
+# Review the selected streams and receiver data policy before forwarding all events.
+action(type="omfwd" target="logs.example.com" port="6514" protocol="tcp"
+       StreamDriver="gtls" StreamDriverMode="1"
+       StreamDriverAuthMode="x509/name"
+       StreamDriverPermittedPeers="logs.example.com"
+       action.resumeRetryCount="-1" action.resumeInterval="5"
+       queue.type="LinkedList" queue.filename="cloudhero-central"
+       queue.maxDiskSpace="256m" queue.saveOnShutdown="on")
+
+# This queue assists retry but is not an exactly-once/durable-receipt guarantee.
+# Validate rsyslogd -N1; test receipt for both logger and auditctl markers, wrong
+# certificate rejection, bounded outage recovery, queue monitoring, and alerting.

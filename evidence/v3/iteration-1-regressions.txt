@@ -1,0 +1,11 @@
+PASS | added override detected and restoration clean: /etc/apt/apt.conf.d/99-disable-updates
+PASS | added override detected and restoration clean: /etc/apt/sources.list.d/unapproved.sources
+PASS | added override detected and restoration clean: /etc/systemd/journald.conf.d/99-volatile.conf
+PASS | added override detected and restoration clean: /etc/ufw/before.rules
+PASS | added override detected and restoration clean: /etc/ufw/after6.rules
+PASS | added override detected and restoration clean: /etc/sudoers.d/unapproved
+PASS | added override detected and restoration clean: /etc/rsyslog.d/unapproved.conf
+PASS | firewall defaults drift detected
+PASS | documented GRUB excerpt preserves submenu, nested title and image
+PASS | fresh private reports, failure evidence/exit preserved, existing file and symlink untouched
+PASS | collector distinguishes bare-metal observation, policy findings, permission/tool errors and timeout

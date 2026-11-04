@@ -1,0 +1,16 @@
+6.8.0-147-generic
+8884f829-254c-45f3-a1ae-274eb30208b4
+6:GRUB_DEFAULT=0
+next_entry=
+145:menuentry 'Ubuntu' --class ubuntu --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-simple-86f7cf19-9959-4dba-91b1-0052c9d45c21' {
+154:	linux	/vmlinuz-6.8.0-147-generic root=UUID=86f7cf19-9959-4dba-91b1-0052c9d45c21 ro  console=tty1 console=ttyAMA0
+157:submenu 'Advanced options for Ubuntu' $menuentry_id_option 'gnulinux-advanced-86f7cf19-9959-4dba-91b1-0052c9d45c21' {
+158:	menuentry 'Ubuntu, with Linux 6.8.0-147-generic' --class ubuntu --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-6.8.0-147-generic-advanced-86f7cf19-9959-4dba-91b1-0052c9d45c21' {
+168:		linux	/vmlinuz-6.8.0-147-generic root=UUID=86f7cf19-9959-4dba-91b1-0052c9d45c21 ro  console=tty1 console=ttyAMA0
+172:	menuentry 'Ubuntu, with Linux 6.8.0-147-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-6.8.0-147-generic-recovery-86f7cf19-9959-4dba-91b1-0052c9d45c21' {
+181:		linux	/vmlinuz-6.8.0-147-generic root=UUID=86f7cf19-9959-4dba-91b1-0052c9d45c21 ro recovery nomodeset 
+185:	menuentry 'Ubuntu, with Linux 6.8.0-142-generic' --class ubuntu --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-6.8.0-142-generic-advanced-86f7cf19-9959-4dba-91b1-0052c9d45c21' {
+195:		linux	/vmlinuz-6.8.0-142-generic root=UUID=86f7cf19-9959-4dba-91b1-0052c9d45c21 ro  console=tty1 console=ttyAMA0
+199:	menuentry 'Ubuntu, with Linux 6.8.0-142-generic (recovery mode)' --class ubuntu --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-6.8.0-142-generic-recovery-86f7cf19-9959-4dba-91b1-0052c9d45c21' {
+208:		linux	/vmlinuz-6.8.0-142-generic root=UUID=86f7cf19-9959-4dba-91b1-0052c9d45c21 ro recovery nomodeset 
+236:		menuentry 'UEFI Firmware Settings' $menuentry_id_option 'uefi-firmware' {

@@ -1,0 +1,204 @@
+{
+  "baseline_version": "LH-1.2",
+  "target": null,
+  "evidence_scope": null,
+  "assessed_at": null,
+  "checks": [
+    {
+      "id": "SSH-01",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "SSH-02",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "SSH-03",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "SSH-04",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "PATCH-01",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "PATCH-02",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "PATCH-03",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "PATCH-04",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "KERN-01",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "KERN-02",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "KERN-03",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "KERN-04",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "NET-01",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "NET-02",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "NET-03",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "NET-04",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "AUD-01",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "AUD-02",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "AUD-03",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "AUD-04",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "DRIFT-01",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "DRIFT-02",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "DRIFT-03",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "DRIFT-04",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "VERIFY-01",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "VERIFY-02",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "VERIFY-03",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    },
+    {
+      "id": "VERIFY-04",
+      "status": "MANUAL",
+      "rationale": "Required evidence has not been supplied.",
+      "evidence": [],
+      "exception": null
+    }
+  ]
+}
