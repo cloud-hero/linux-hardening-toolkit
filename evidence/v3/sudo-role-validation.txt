@@ -1,0 +1,3 @@
+PASS | password-required role fails noninteractive probe but succeeds with authorized authentication
+PASS | restricted automation role executes its approved command; generic true probe is rejected
+PASS | temporary policy and identities removed; existing administrator policy untouched

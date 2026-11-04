@@ -1,0 +1,2 @@
+PASS | Unique syslog marker delivered across namespace boundary with mutual TLS
+PASS | Linux Audit marker delivered through explicit audit-file input

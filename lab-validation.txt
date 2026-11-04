@@ -1,0 +1,197 @@
+CLOUDHERO LINUX HARDENING LAB RECORD
+Current edition: LH-1.2; original LH-1.1 record and dated revision below
+Tests: 2026-11-03; fresh SSH acceptance and artifact review: 2026-11-04
+Scope: disposable local VM only. No production host was changed.
+
+ENVIRONMENT
+Host: macOS ARM64, Apple Virtualization Framework (VZ)
+VM manager: Lima 2.2.1
+Guest: Ubuntu 24.04.5 LTS, ARM64 / aarch64
+Resources: 2 CPUs, 3 GiB RAM, 16 GiB virtual disk
+Mounts: none; host home directory was not exposed to the guest
+SSH access: 127.0.0.1:60024; task-specific generated key
+Image: https://cloud-images.ubuntu.com/releases/noble/release-20260926/ubuntu-24.04-server-cloudimg-arm64.img
+Image SHA-256: 1d6bffe64b848468ac97f821d369a4846d983de1800ccf6b5ec8853e85cefc55
+Lima archive SHA-256: 9e9eacce88f37e185c346bad73aa6136f738d8cdf8c3bb23cd42b071824bc66e
+
+PACKAGE AND KERNEL RESULTS
+Initial running kernel: 6.8.0-142-generic
+Final running kernel: 6.8.0-147-generic
+Final default boot symlink: /boot/vmlinuz-6.8.0-147-generic
+Kernel meta-package: linux-image-virtual 6.8.0-147.147
+OpenSSH server: 1:9.6p1-3ubuntu13.19 -> 1:9.6p1-3ubuntu13.20
+auditd: 1:3.1.2-2.1ubuntu0.1
+ufw: 0.36.2-6
+unattended-upgrades: 2.9.1+nmu4ubuntu1
+Ordinary apt-get upgrade: 70 upgraded, 4 kernel meta-packages kept back.
+Reviewed apt-get --with-new-pkgs upgrade: 4 upgraded, 6 new packages, 0 removals.
+Final apt-get simulations, with and without new dependencies: 0 remaining upgrades.
+Final needrestart -r l: running kernel current; no services or sessions need restart.
+These dated versions are observations, not evergreen recommended versions.
+
+TESTS AND EVIDENCE
+SSH: sshd -t, sshd -T with connection context; invalid isolated configuration
+rejected. Fresh host-key-verified, non-multiplexed key login and sudo succeeded.
+Root login and password-only authentication each returned exit 255 with
+Permission denied (publickey). Effective PermitRootLogin=no and both password
+and keyboard-interactive authentication=no were independently checked.
+Files: checks-final-kernel.txt, ssh-authentication.txt, fresh-ssh.txt.
+
+Patching: refreshed metadata, checked holds, ran unattended-upgrade dry run,
+reviewed transactions, applied updates, checked periodic and reboot policy,
+verified both APT timers enabled, then checked package consistency.
+Files: vm-provision.log, patching.log, kernel-plan.txt, kernel-upgrade.txt,
+assessment-final.txt.
+
+Kernel: recorded the old running image while 6.8.0-147 was installed, then
+performed an actual guest reboot. Boot ID changed and uname -r matched the
+new intended kernel. A prior full VM stop/start also verified persistence.
+Files: kernel-before-reboot.txt, kernel-after-reboot.txt, pre-reboot.txt,
+post-reboot.txt.
+Revision test: grub-reboot selected 6.8.0-142-generic for one boot; it really
+booted (boot ID 4d557973-e2ce-467f-b6fa-fc7709089947). The next normal reboot
+restored 6.8.0-147-generic (boot ID 8e5a5566-049d-4c76-83e6-fc4c9e8248d8).
+No failed units were reported; SSH validation and audit lost=0 passed.
+Files: v2/fallback-plan.txt, v2/fallback-boot.txt, v2/restored-patched-kernel.txt.
+
+Firewall: a separate network namespace generated ingress over a veth pair.
+Allowed source 198.18.0.2 reached TCP 22 at 198.18.0.1; source 198.18.0.3
+timed out. IPv6 fd42:face::2 was allowed; fd42:face::3 was filtered.
+A second namespace reached live TCP 443 listeners but could not reach live
+TCP 8080 listeners over either IPv4 or IPv6. The temporary allowance and
+listeners were removed; exact saved firewall file hashes were restored.
+This tests host ingress, not the internet, cloud firewalls or TLS behavior.
+Files: checks-final-kernel.txt, application-network.txt.
+
+Audit: all four targeted SSH/sudo configuration rules loaded and survived
+reboot. A controlled SSH drop-in write produced an audit event retrievable
+using ausearch --input-logs. Audit lost counter remained 0.
+Journal: cloudhero-reboot-persistence-marker remained available across three
+boots. Time synchronization reported NTPSynchronized=yes.
+Files: checks-final-kernel.txt, kernel-after-reboot.txt, assessment-final.txt.
+
+Drift: the initial eight-file checksum check detected a changed SSH drop-in
+and passed after exact restoration. LH-1.1 adds a 135-entry full inventory:
+names/types/modes/owners/symlinks/content, including directory membership.
+Ten VM regression assertions passed: clean/private baseline; missing input
+preserves prior bytes; content change/restoration; extra path; mode; owner;
+missing file; symlink substitution; unsupported input prevents replacement;
+no partial manifest remains. The installed approved-path collector matched
+all 135 entries. Local root trust is still not independent attestation.
+Files: v2/drift-regression.txt, v2/host-inventory.txt,
+v2/installed-inventory-check.txt, scripts/test-baseline.py.
+
+Logging revision tests: dedicated rsyslog forwarder sent a unique syslog
+marker and a real Linux Audit marker (explicit imfile input) across a network
+namespace boundary to a separate receiver using mutual TLS. A valid-CA server
+with the wrong expected identity was rejected; its marker was absent. After
+a bounded receiver outage, the final queued marker and a new marker arrived.
+The test does NOT prove delivery of every outage message, exactly-once
+semantics, production queue/disk-pressure alerts or human acknowledgement.
+Audit rotation changed the active log inode, retained the earlier marker in
+audit.log.1 and recorded a new marker with lost=0. AppArmor stayed enabled;
+an initial path denial was corrected by using permitted config/spool paths.
+Files: v2/tls-logging.txt, v2/audit-rotation.txt, v2/logging-prerequisites.txt.
+
+Synthetic acceptance: release A passed a representative transaction. Release
+B returned HTTP 200 from /health while the transaction result was wrong. The
+semantic gate held the rollout; restoring A passed the same transaction.
+This fixture is not evidence for real user transactions, jobs or dependencies.
+File: v2/workload-gates.txt.
+
+Operating-system verification: no failed systemd services, no dpkg audit
+findings, no remaining package updates in refreshed-metadata simulations.
+Files: checks-final-kernel.txt, assessment-final.txt.
+Revision: core checks passed after fallback recovery; collector-final.txt
+reported zero collection errors. Fresh host-key-verified admin+sudo login
+on 4 November passed; root/password-only attempts rejected with explicit
+Permission denied (publickey), statuses 255/255.
+Files: v2/core-after-recovery.txt, v2/collector-final.txt,
+v2/ssh-authentication.txt.
+
+ISSUES FOUND AND ADDRESSED
+1. After an OpenSSH update, ssh.socket was listening but ssh.service was idle.
+   sshd -t reported missing /run/sshd until a fresh real connection activated
+   the service and recreated RuntimeDirectory. The guide documents this.
+2. ausearch defaults to stdin when input is redirected. The lab harness now
+   explicitly uses --input-logs, with a bounded wait for event completion.
+3. apt-get upgrade kept back kernel meta-packages requiring new dependencies.
+   needrestart initially reported the old running kernel as up to date because
+   the newer image was not installed. The guide now includes candidate checks,
+   a reviewed --with-new-pkgs simulation and actual post-reboot verification.
+4. Lima stop/start regenerated cloud-init instance identity and SSH host keys.
+   The new lab key was checked against the managed guest's regenerated public
+   key before refreshing the task-only trust file. The subsequent guest reboot
+   preserved it. No production known_hosts files were changed.
+
+LIMITS
+Not tested: other distributions/architectures, cloud firewall policies,
+internet vantage points, Docker/Kubernetes forwarding, UDP service exposure,
+PAM MFA, livepatch coverage, production receiver retention/access/alerts or
+human acknowledgement, production audit load/disk exhaustion, independent
+baseline provenance, complete runtime configuration-management integration,
+identity governance, backup/data restore, production transaction/job/dependency
+acceptance, production rollback or load-balancer drain. The fallback-kernel,
+TLS receiver, file inventory and synthetic rollback tests are real lab tests,
+not a compliance, fleet or CVE certificate.
+
+The fixed 28-control report retains 3 scoped PASS and 25 MANUAL outcomes;
+production requirements are not waived just because this is a lab. Structural
+report validation passes. Missing/duplicate IDs, evidence-free PASS and
+unjustified N/A are rejected by regression tests; zero denominator is undefined.
+
+Website: local HTTP/content/download integrity checked. Safari desktop layout,
+responsive stacking at a zoom-reduced CSS viewport, assessment navigation and
+prompt-copy success were observed. No physical mobile device was tested. The PDF was
+rendered and inspected; catalogue entries are kept together across page breaks.
+
+REPRODUCIBLE SOURCES
+lab.yaml: checksum-pinned VM definition
+scripts/lima.sh: workspace-scoped Lima state
+scripts/lab-harden.sh: disposable-VM fixture only
+scripts/lab-verify.sh: effective settings, negative tests, audit, drift, network
+scripts/lab-network.sh: allowed app port, blocked listener and rollback
+scripts/assess.sh: observational collector for the approved Linux target
+content/guide.md: shared source for article and PDF
+content/assessment-prompt-base.txt + controls.json: generated fixed-ID prompt
+scripts/baseline.py + test-baseline.py: full inventory and regression tests
+scripts/check-report.py + test-report.py: fixed-report validation
+scripts/lab-logging.sh: isolated mutual-TLS event/outage/identity tests
+scripts/lab-audit-rotation.sh: real rotation/event continuity
+scripts/lab-workload.py: synthetic semantic gate and rollback
+
+The final VM is stopped after testing; its state remains available locally.
+The local website preview remains available for review. No release was pushed.
+
+LH-1.2 REVIEW REVISION — 4 NOVEMBER 2026
+The preceding LH-1.1 results are historical. Current scope expands to 185
+entries, including complete APT, journald drop-ins, UFW, sudo and rsyslog
+configuration. Versioned manifest files-lh-1.2.json was created explicitly
+from the reviewed lab state; the earlier edition remains historical evidence.
+
+Iteration 1: five review defects received regression fixes; root capture tests
+proved 0700/0600 creation, unique paths and preserved failed-collection output.
+The new logging fixture initially awaited a suspension string while this
+rsyslog version reported connection refusal. The incomplete attempt is retained.
+
+Iteration 2: use the actual connection-failure signal. Reconciled all 300 IDs
+sent after confirmed refusal: 300 unique receipts, zero missing, zero duplicates.
+A real named queue exceeded the test threshold (observed size 321) and a local
+alert receipt was produced. Optional process-resource metrics were restricted
+by AppArmor; queue statistics were observed without disabling confinement.
+This is bounded queue pressure, not disk exhaustion, crash durability,
+ambiguous in-flight TCP recovery or production human acknowledgement.
+Temporary password-required and restricted automation sudo roles were tested,
+then removed. Existing administrator policy was not expanded.
+
+Iteration 3 integration: stdin collection exposed BASH_SOURCE under set -u;
+the entry guard was corrected and a stdin regression added. Final real VM
+collection reports zero collection errors. All 185 inventory entries match;
+new SSH identity/privilege checks and forbidden authentication paths pass.
+Corrected GRUB excerpts retain actual nested titles and image paths.
+
+Current transcripts: evidence/v3/final-regressions.txt, collector-final.txt,
+expanded-host-inventory.txt, sudo-role-validation.txt, ssh-final.txt,
+grub-menu.txt, core-final.txt and logging-iteration-2.txt.
+The fixed report still contains 3 scoped PASS and 25 MANUAL outcomes; a guide
+quality rating never closes missing organizational/production evidence.

@@ -1,0 +1,9 @@
+Verification UTC: 2026-11-04T13:36:33Z
+Report: /tmp/hardening-review/linux-assessment.9Zzy5jqe/assessment.txt
+Collector exit: 0
+Keep the original private; review and redact a separate copy before sharing.
+Report mode=600 owner=root
+Directory mode=700 owner=root
+Collection errors: 0. This is a collector result, not a security assessment. A timeout is exit 124. The fixed 28-control catalogue must still be evaluated.
+MATCH: 185 entries, including names/types/modes/owners/content
+PASS | Temporary sudo test identities removed

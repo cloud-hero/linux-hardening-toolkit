@@ -1,0 +1,8 @@
+PASS | Unique syslog marker delivered across namespace boundary with mutual TLS
+PASS | Linux Audit marker delivered through explicit audit-file input
+PASS | Receiver outage produces an observable forwarding connection failure
+PASS | Real queue-pressure observation delivered to local fixture alert sink; size=321
+RECONCILIATION | expected=300 unique_received=300 missing=[] duplicates={}
+PASS | Every queued sequence ID reconciled; negative gap check passed (no exactly-once guarantee)
+PASS | Valid CA but wrong server certificate identity rejected; marker absent at receiver
+PASS | Logging fixture completed; private PKI and logs remain only inside the VM spool folder

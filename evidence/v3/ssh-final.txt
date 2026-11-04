@@ -1,0 +1,6 @@
+2026-11-04T13:28:33Z
+PASS | fresh host-key-verified non-multiplexed SSH identity is andrei
+PASS | existing approved noninteractive lab role performs its exact privilege check
+root@127.0.0.1: Permission denied (publickey).
+andrei@127.0.0.1: Permission denied (publickey).
+PASS | root/password-only authentication rejected (255/255)

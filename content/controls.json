@@ -1,0 +1,229 @@
+{
+  "version": "LH-1.2",
+  "controls": [
+    {
+      "id": "SSH-01",
+      "area": "SSH access",
+      "title": "Effective authentication",
+      "pass_criteria": "Root login is disabled; every user/source Match context enforces the approved key/certificate or MFA chain; no unintended password-only route.",
+      "evidence": "sshd -t; sshd -T -C for each approved context and root; approved authentication policy.",
+      "applicability": "Always applicable to a server offering SSH."
+    },
+    {
+      "id": "SSH-02",
+      "area": "SSH access",
+      "title": "Identity and key lifecycle",
+      "pass_criteria": "Every privileged identity/key/CA has an owner, justified privilege, revocation path and current access review.",
+      "evidence": "Redacted identity inventory, sudo scope, key/CA lifecycle and offboarding evidence.",
+      "applicability": "Always applicable; non-SSH administration uses equivalent identity evidence."
+    },
+    {
+      "id": "SSH-03",
+      "area": "SSH access",
+      "title": "Fresh access verification",
+      "pass_criteria": "A new non-multiplexed session and required sudo action succeed after change; forbidden authentication is rejected in an authorized test.",
+      "evidence": "Timestamped new-session receipt, effective forbidden-authentication policy and bounded negative test.",
+      "applicability": "Always applicable when SSH is the management path."
+    },
+    {
+      "id": "SSH-04",
+      "area": "SSH access",
+      "title": "Recovery and revocation",
+      "pass_criteria": "The approved console/break-glass route and an access-revocation exercise meet the organization recovery objective.",
+      "evidence": "Dated recovery/revocation exercise, responsible owner, credential storage and retrieval record.",
+      "applicability": "Always applicable; do not perform a recovery drill during observational assessment."
+    },
+    {
+      "id": "PATCH-01",
+      "area": "Patch management",
+      "title": "Supported sources and coverage",
+      "pass_criteria": "OS release, kernel track and repositories are supported, signatures verified and every software channel has an update owner.",
+      "evidence": "Release/support evidence, repository signing configuration, entitlement status, third-party/runtime inventory.",
+      "applicability": "Always applicable."
+    },
+    {
+      "id": "PATCH-02",
+      "area": "Patch management",
+      "title": "Fresh update inventory",
+      "pass_criteria": "All required indexes have a successful refresh within policy; all pending/held packages are identified using both ordinary and new-dependency simulations.",
+      "evidence": "Refresh receipt for every source, metadata age, apt holds, simulations, dpkg audit.",
+      "applicability": "Always applicable; use vendor equivalents outside Ubuntu."
+    },
+    {
+      "id": "PATCH-03",
+      "area": "Patch management",
+      "title": "Patch execution evidence",
+      "pass_criteria": "The approved pipeline or unattended policy has successful runs, intended origins, monitored failures and controlled restart/reboot behavior.",
+      "evidence": "Effective allowed origins and periodic settings, timer/job state, successful transaction and failure alert receipt.",
+      "applicability": "Always applicable; a managed pipeline is a valid alternative to unattended installs."
+    },
+    {
+      "id": "PATCH-04",
+      "area": "Patch management",
+      "title": "Remediation deadlines",
+      "pass_criteria": "Every applicable overdue fix has an approved, unexpired exception; no unowned exposed vulnerability remains.",
+      "evidence": "CVE/package mapping, exposure, owner, due date, exception approver and compensating control.",
+      "applicability": "Always applicable; no open findings still requires the current inventory and policy."
+    },
+    {
+      "id": "KERN-01",
+      "area": "Kernel lifecycle",
+      "title": "Kernel track and boot capacity",
+      "pass_criteria": "The approved supported flavour/meta-package is present; boot/root free space supports the reviewed transaction and recovery image.",
+      "evidence": "Package/candidate records, vendor support track, bootloader type, disk capacity.",
+      "applicability": "Always applicable to hosts; a container points to an identified host owner, not an automatic N/A."
+    },
+    {
+      "id": "KERN-02",
+      "area": "Kernel lifecycle",
+      "title": "Installed and active fix state",
+      "pass_criteria": "Running kernel, installed fixed revision and actual next-boot selection are reconciled; livepatch claims name specific coverage.",
+      "evidence": "uname -r; package ownership/version; actual bootloader entries; vendor advisory; livepatch evidence if used.",
+      "applicability": "Always applicable to the assessed host. Livepatch itself can be unused without making the control N/A."
+    },
+    {
+      "id": "KERN-03",
+      "area": "Kernel lifecycle",
+      "title": "Verified reboot activation",
+      "pass_criteria": "Required reboot is completed within policy and the intended kernel is active with working drivers, networking and workloads.",
+      "evidence": "Changed boot ID, post-boot kernel, restart-needs check and workload acceptance record.",
+      "applicability": "For a maintenance assessment. For a baseline audit, use a recent approved exercise; absent evidence is MANUAL."
+    },
+    {
+      "id": "KERN-04",
+      "area": "Kernel lifecycle",
+      "title": "Fallback boot recovery",
+      "pass_criteria": "A retained recovery option has been exercised and can restore service within the approved recovery objective.",
+      "evidence": "Actual fallback/recovery exercise, console access, application recovery and vulnerability re-triage record.",
+      "applicability": "Always applicable; an image-replacement strategy can substitute for an older-kernel boot."
+    },
+    {
+      "id": "NET-01",
+      "area": "Firewall exposure",
+      "title": "Approved exposure inventory",
+      "pass_criteria": "Every listener maps to an owned service with expected protocol, family, source and destination; unused services are removed or explicitly excepted.",
+      "evidence": "Service-exposure inventory and ss listener comparison.",
+      "applicability": "Always applicable, including non-public hosts."
+    },
+    {
+      "id": "NET-02",
+      "area": "Firewall exposure",
+      "title": "Effective host and platform policy",
+      "pass_criteria": "Host rules, cloud/network policies and container forwarding permit only the approved paths across IPv4 and every deployed IPv6 path.",
+      "evidence": "Effective rules, management-source restrictions, cloud/load-balancer evidence and container mappings.",
+      "applicability": "Always applicable. Undeployed layers need an evidence-backed reason, not guessed absence."
+    },
+    {
+      "id": "NET-03",
+      "area": "Firewall exposure",
+      "title": "Allowed and denied path proof",
+      "pass_criteria": "Authorized probes confirm expected access and rejection from named management and untrusted vantage points, including deployed UDP services.",
+      "evidence": "Source/destination/protocol/family matrix with live-listener positive and negative results.",
+      "applicability": "Always applicable; no external vantage point means MANUAL for external exposure."
+    },
+    {
+      "id": "NET-04",
+      "area": "Firewall exposure",
+      "title": "Firewall recovery",
+      "pass_criteria": "The prior approved rules can be restored through a tested independent access path and required services recover.",
+      "evidence": "Rollback exercise, saved exact policy and post-restore access/health evidence.",
+      "applicability": "Always applicable; observational mode consumes existing evidence only."
+    },
+    {
+      "id": "AUD-01",
+      "area": "Audit and logging",
+      "title": "Useful event coverage",
+      "pass_criteria": "Persistent audit rules and authentication/privilege logs cover the approved event inventory and controlled events are retrievable.",
+      "evidence": "Loaded and persistent rules, event inventory, redacted audit/authentication event examples.",
+      "applicability": "Always applicable; alternative audit mechanisms require documented equivalent evidence."
+    },
+    {
+      "id": "AUD-02",
+      "area": "Audit and logging",
+      "title": "Retention and pressure behavior",
+      "pass_criteria": "Journal and audit-log limits separately match policy; rotation, free-space/queue alerts and failure actions are verified under safe test conditions.",
+      "evidence": "Effective journald and auditd settings, retention calculation, rotation result, disk/queue alert exercise.",
+      "applicability": "Always applicable; a configured limit alone is not a retention guarantee."
+    },
+    {
+      "id": "AUD-03",
+      "area": "Audit and logging",
+      "title": "Authenticated central delivery",
+      "pass_criteria": "Required event streams reach an authenticated central receiver; a failed certificate is rejected and a bounded receiver outage is detected and recovered.",
+      "evidence": "TLS peer verification, unique marker receipt, audit-event receipt, negative TLS result, outage/recovery and queue evidence.",
+      "applicability": "Always applicable for this production baseline; local-only logging is an exception, not N/A."
+    },
+    {
+      "id": "AUD-04",
+      "area": "Audit and logging",
+      "title": "Actionable detection",
+      "pass_criteria": "Synchronized timestamps, central access/retention controls and a routed alert with human acknowledgement meet policy.",
+      "evidence": "Clock status, receiver retention/access policy, alert receipt/acknowledgement and response owner.",
+      "applicability": "Always applicable; a lab sink is not proof of production alert handling."
+    },
+    {
+      "id": "DRIFT-01",
+      "area": "Configuration drift",
+      "title": "Trusted desired state",
+      "pass_criteria": "The approved baseline, scope and revision are stored independently of the host and tied to an authorized change.",
+      "evidence": "Reviewed repository/artifact revision, external manifest digest, scope and approver.",
+      "applicability": "Always applicable; a root-writable local manifest alone cannot pass."
+    },
+    {
+      "id": "DRIFT-02",
+      "area": "Configuration drift",
+      "title": "Complete file inventory",
+      "pass_criteria": "Approved paths match names, types, owners, permissions, symlink targets and file content; extra/missing files are detected.",
+      "evidence": "Inventory comparison plus positive/negative regression evidence.",
+      "applicability": "Always applicable; explicit exclusions must have owners and reasons."
+    },
+    {
+      "id": "DRIFT-03",
+      "area": "Configuration drift",
+      "title": "Runtime and package drift",
+      "pass_criteria": "Effective SSH policy, active firewall, enabled services, installed packages and kernel track match the approved inventory.",
+      "evidence": "Versioned runtime/package/service inventories and independent comparisons.",
+      "applicability": "Always applicable; filesystem hashes alone cannot pass."
+    },
+    {
+      "id": "DRIFT-04",
+      "area": "Configuration drift",
+      "title": "Safe baseline promotion",
+      "pass_criteria": "Missing/unreadable/unsupported input prevents baseline replacement; reconciliation preserves the approved record and exceptions expire.",
+      "evidence": "Atomic promotion negative test, restoration test, approval record, drift ticket/exception expiry.",
+      "applicability": "Always applicable."
+    },
+    {
+      "id": "VERIFY-01",
+      "area": "Production verification",
+      "title": "Defined acceptance and recovery",
+      "pass_criteria": "Named owner has approved success thresholds, observation window, rollback trigger, recovery objective and maintenance dependencies before change.",
+      "evidence": "Completed change worksheet and recent application recovery evidence.",
+      "applicability": "Always applicable."
+    },
+    {
+      "id": "VERIFY-02",
+      "area": "Production verification",
+      "title": "OS and access acceptance",
+      "pass_criteria": "Fresh admin access, intended kernel, completed package state, expected listeners, healthy critical units and logging pass after change/reboot.",
+      "evidence": "Timestamped pre/post checks and unresolved-error list.",
+      "applicability": "Always applicable; known pre-existing failures require an approved exception."
+    },
+    {
+      "id": "VERIFY-03",
+      "area": "Production verification",
+      "title": "Workload acceptance",
+      "pass_criteria": "A representative user transaction, background job and dependency path meet agreed correctness/latency/error thresholds during the observation window.",
+      "evidence": "Actual transaction/job receipts and monitoring comparison to the recorded baseline.",
+      "applicability": "Always applicable; a synthetic lab application does not certify the real workload."
+    },
+    {
+      "id": "VERIFY-04",
+      "area": "Production verification",
+      "title": "Controlled rollout decision",
+      "pass_criteria": "Canary acceptance, rollback rehearsal, staged rollout and final owner sign-off are recorded; failed gates stop advancement.",
+      "evidence": "Release decision record with canary count, gates, rollback result and sign-off.",
+      "applicability": "Always applicable; assessment alone never authorizes a production rollout."
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+PASS | release A representative transaction
+PASS | faulty release still returns HTTP 200 from health endpoint
+PASS | semantic acceptance gate detects wrong result and holds rollout
+PASS | rollback to release A restores representative transaction

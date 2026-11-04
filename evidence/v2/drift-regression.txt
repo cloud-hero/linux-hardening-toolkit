@@ -1,0 +1,10 @@
+PASS | clean inventory and private manifest
+PASS | missing input leaves existing manifest byte-identical
+PASS | content drift and restoration
+PASS | unexpected drop-in detected
+PASS | permission drift detected
+PASS | ownership drift detected
+PASS | missing approved file detected
+PASS | symlink substitution detected without reading its target
+PASS | unsupported input cannot replace baseline
+PASS | no partial manifest left behind

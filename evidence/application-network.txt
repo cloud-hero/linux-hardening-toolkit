@@ -1,0 +1,18 @@
+Rule added
+Rule added (v6)
+LISTEN 0      128                *:8080            *:*          
+LISTEN 0      128                *:443             *:*          
+PASS | Application ingress 198.19.0.1:443: allowed
+PASS | Application ingress 198.19.0.1:8080: filtered despite active listener
+PASS | Application ingress fd43:face::1:443: allowed
+PASS | Application ingress fd43:face::1:8080: filtered despite active listener
+Firewall reloaded
+/etc/ssh/sshd_config: OK
+/etc/ssh/sshd_config.d/00-cloudhero.conf: OK
+/etc/apt/apt.conf.d/20auto-upgrades: OK
+/etc/apt/apt.conf.d/52cloudhero-reboot: OK
+/etc/systemd/journald.conf.d/60-cloudhero.conf: OK
+/etc/audit/rules.d/50-cloudhero.rules: OK
+/etc/ufw/user.rules: OK
+/etc/ufw/user6.rules: OK
+PASS | Firewall fixture rollback restored exact approved files

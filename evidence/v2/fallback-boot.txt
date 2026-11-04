@@ -1,0 +1,16 @@
+6.8.0-142-generic
+4d557973-e2ce-467f-b6fa-fc7709089947
+next_entry=
+  UNIT LOAD ACTIVE SUB DESCRIPTION
+
+0 loaded units listed.
+enabled 1
+failure 1
+pid 493
+rate_limit 0
+backlog_limit 8192
+lost 0
+backlog 0
+backlog_wait_time 60000
+backlog_wait_time_actual 0
+loginuid_immutable 0 unlocked

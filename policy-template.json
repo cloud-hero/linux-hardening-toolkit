@@ -1,0 +1,52 @@
+{
+  "baseline_version": "LH-1.2",
+  "target_alias": null,
+  "environment": null,
+  "service_owner": null,
+  "security_owner": null,
+  "approved_os_release_and_kernel_track": null,
+  "baseline_revision_and_independent_digest": null,
+  "management_sources_ipv4": [],
+  "management_sources_ipv6": [],
+  "approved_administrators": [],
+  "public_services": [],
+  "patch_deadlines_hours": {
+    "actively_exploited_and_exposed": null,
+    "critical": null,
+    "high": null,
+    "other": null
+  },
+  "maximum_metadata_age_hours": null,
+  "maintenance_window": null,
+  "automatic_service_restart_policy": null,
+  "automatic_reboot_policy": null,
+  "log_receiver_and_certificate_identity": null,
+  "required_log_streams": [
+    "authentication",
+    "privilege changes",
+    "audit events"
+  ],
+  "central_retention_days": null,
+  "maximum_delivery_delay_seconds": null,
+  "maximum_detection_and_acknowledgement_minutes": null,
+  "tested_recovery_objective_minutes": null,
+  "canary_observation_minutes": null,
+  "maximum_error_rate_change": null,
+  "maximum_p95_latency_change": null,
+  "rollback_trigger": null,
+  "exception_approver": null,
+  "approved_ai_processing_and_retention_policy": null,
+  "accountable_people_by_area": {
+    "SSH": null,
+    "PATCH": null,
+    "KERN": null,
+    "NET": null,
+    "AUD": null,
+    "DRIFT": null,
+    "VERIFY": null
+  },
+  "pilot_scope_and_resource_allocation": null,
+  "log_queue_pressure_threshold": null,
+  "log_queue_alert_delivery_deadline_seconds": null,
+  "log_outage_gap_acceptance_and_reconciliation": null
+}
