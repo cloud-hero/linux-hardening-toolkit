@@ -2,7 +2,7 @@
 
 **Purpose:** reduce unauthorized access, unpatched active software, unintended exposure and undetected configuration changes while preserving service availability. This Ubuntu-tested baseline has seven areas and 28 evidence-based controls; application security and business continuity standards remain companion requirements.
 
-**Authorize a bounded pilot first.** Name the service owner and one accountable person for each area in the operating matrix. Select a representative staging host and one recoverable production canary. Agree the AI evidence-processing boundary before sharing data. The security owner proposes vulnerability deadlines and exceptions; the service owner owns business acceptance and recovery decisions.
+**Authorize a bounded pilot first.** Name the service owner and one accountable person for each area in the operating matrix. Select a representative staging host and one recoverable production canary. Require operator collection on the server, redaction and approved transfer, then AI assessment on a separate workstation without server credentials. Agree the AI evidence-processing boundary before sharing data. The security owner proposes vulnerability deadlines and exceptions; the service owner owns business acceptance and recovery decisions.
 
 **Before a production change:** complete the policy and change worksheets; inventory identities, software and traffic paths; prove recovery access; identify application backup/recovery evidence; approve the exact change, observation window and rollback trigger. Establish trusted configuration provenance and central logging. Missing required evidence holds the associated gate; an exception needs a named approver, compensating control and expiry and never becomes a PASS.
 
