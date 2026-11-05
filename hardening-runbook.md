@@ -2,7 +2,7 @@
 
 **Purpose: apply a reviewed fix after assessment and change approval. This document contains commands that change servers.** It is not part of collecting evidence and is not a script to execute from beginning to end. Select the relevant control, adapt the example to the approved target and retain the original evidence.
 
-Toolkit LH-1.3; control catalogue LH-1.2. The executable examples were previously exercised on Ubuntu 24.04 LTS ARM64. Other platforms require their own validation. Follow `linux-server-hardening-guide.md` to assess first. Use `lab-guide.md` only to reproduce the disposable VM tests.
+Toolkit LH-1.4; control catalogue LH-1.2. The executable examples were previously exercised on Ubuntu 24.04 LTS ARM64. Other platforms require their own validation. Follow `linux-server-hardening-guide.md` to assess first. Use `lab-guide.md` only to reproduce the disposable VM tests.
 
 **Three gates:** inspect the existing state and proposed transaction; apply only the approved change; verify its result and recovery path. Read commands and change commands are presented in separate blocks where they previously shared a Copy action. Syntax validation followed immediately by a conditional service reload is explicitly a change operation.
 

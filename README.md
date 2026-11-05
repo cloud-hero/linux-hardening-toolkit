@@ -1,6 +1,6 @@
-# Linux hardening assessment toolkit · LH-1.3
+# Linux hardening assessment toolkit · LH-1.4
 
-From [CloudHero](https://cloudhero.io/). [Get the LH-1.3 release assets](https://github.com/cloud-hero/linux-hardening-toolkit/releases/tag/lh-1.3): complete ZIP, assessment PDF, prompt and checksums.
+From [CloudHero](https://cloudhero.io/). [Get the LH-1.4 release assets](https://github.com/cloud-hero/linux-hardening-toolkit/releases/tag/lh-1.4): complete ZIP, assessment PDF, prompt and checksums.
 
 Control catalogue LH-1.2: seven areas and 28 controls, tested on Ubuntu 24.04 LTS ARM64. This workflow revision keeps the collection scripts and criteria unchanged. Commands require adaptation and validation on other platforms.
 
@@ -31,9 +31,22 @@ Keep the original private on the server. Review a separate copy, remove data you
 
 Bring the completed `policy-template.json`, workload role/environment and approved supporting evidence. Do not transfer SSH keys, passwords, tokens or unrestricted logs. Approve the AI service and its processing/retention arrangements: using a cloud model from a workstation still sends the supplied evidence to that service.
 
+### Optional: add current vulnerability context
+
+Cloudflare [announced Zero Wire on 3 November 2026](https://developers.cloudflare.com/changelog/post/2026-11-03-radar-zero-wire/). Its curated briefings can help identify relevant investigations. An operator can fetch public Zero Wire and CISA KEV context on the analysis workstation with Python 3.10+:
+
+```sh
+# WORKSTATION ONLY: no server report is read or uploaded.
+python3 vulnerability-context.py fetch --output-dir ./intel-run-001
+```
+
+Use a new directory for every run and supply `intel-run-001/context.json` alongside redacted evidence. Exit 0 means sources parsed; 1 means explicit source gaps; 2 means snapshot/output validation failed. No outcome means the server is secure. The helper preserves dates and checksums and omits embedded agent prompts. It does not follow vendor links or determine target applicability.
+
+Follow [vulnerability-context.md](vulnerability-context.md) for offline snapshot replay and the public-advisory permission handoff. Public advisory browsing defaults to offline; explicitly allow it when wanted, using only public CVE/product terms. Verify exact affected/fixed vendor revisions and active software state. Missing observations remain unknown. Keep all 28 controls and add a dated, unscored vulnerability appendix. A missing feed entry or KEV listing is not proof of safety.
+
 ### 3. Run the prompt on the analysis workstation
 
-Open your approved Claude or Codex environment on the separate machine. Supply the full `linux-assessment-prompt.txt`, the redacted report, completed policy and target context. Give access only to the approved evidence and output area; keep server credentials and production execution access out of the analysis environment. Explicitly include this instruction alongside the full prompt:
+Open your approved Claude or Codex environment on the separate machine. Supply the full `linux-assessment-prompt.txt`, the redacted report, completed policy, target context and optional `context.json` plus vendor receipts. Give access only to the approved evidence and output area; keep server credentials and production execution access out of the analysis environment. Explicitly include this instruction alongside the full prompt:
 
 ```text
 Assess only the server described in the attached redacted evidence.
@@ -68,10 +81,6 @@ The validator rejects missing/duplicate IDs, unsupported PASS entries and unjust
 The ZIP includes dated lab transcripts under `evidence/` and test sources under `scripts/`. Follow `lab-guide.md` only when your task is reproducing those tests. The modifying `lab-*.sh` fixtures are exclusively for a disposable VM and must never be run on production. `lima.sh` expects official Lima binaries at `.lab/tools/bin/limactl`; the pinned image and VM settings are in `lab.yaml`. See `lab-validation.txt` for what was and was not tested. The source hashes identify this edition, not a signed trust root.
 
 Use `cve-record.md` to add current vendor advisory and exact package/active-fix evidence to an individual CVE article. Do not treat the lab's dated versions as permanent recommendations.
-
-## Optional maintainer validation
-
-Follow the [lab guide](lab-guide.md#local-software-regression-tests) for local software regression and disposable-VM reproduction. These are not steps for collecting a server assessment.
 
 ## Evidence and scope
 

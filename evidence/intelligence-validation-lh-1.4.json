@@ -1,0 +1,32 @@
+{
+  "edition": "LH-1.4",
+  "scope": "Public intelligence helper on analysis workstation; no target assessment or new VM exercise",
+  "snapshot_created_at": "2026-11-05T10:52:20+00:00",
+  "sources": {
+    "cisa_kev": {
+      "bytes": 1830574,
+      "catalog_version": "2026.11.04",
+      "count": 1768,
+      "released_at": "2026-11-04T20:00:05+00:00",
+      "retrieved_at": "2026-11-05T10:52:20+00:00",
+      "sha256": "273b7e449828f0af92e012bf03270a6a6c3deb21dc7a50b46ebe0447ea196bff",
+      "status": "available",
+      "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
+    },
+    "zero_wire": {
+      "bytes": 49532,
+      "last_build_at": "2026-11-01T00:00:00+00:00",
+      "retrieved_at": "2026-11-05T10:52:20+00:00",
+      "sha256": "500ca4588a83ff2ddaaa1aa0ab34de751307241798c83cb96308ba09f9401535",
+      "status": "available",
+      "url": "https://radar.cloudflare.com/security/zero-wire/rss"
+    }
+  },
+  "observed_briefings": 6,
+  "observed_candidate_cves": 8,
+  "source_gaps": [],
+  "live_fetch_exit_code": 0,
+  "offline_replay_byte_identical": true,
+  "offline_fixture_tests_passed": 19,
+  "context_sha256": "869a6525555d595e0b2dd09ab40a1aaa3440982e092ff29fd26e0e68727a455a"
+}
