@@ -1,91 +1,37 @@
-# Linux hardening assessment toolkit · LH-1.4
+# Linux hardening assessment toolkit · LH-1.5
 
-From [CloudHero](https://cloudhero.io/). [Get the LH-1.4 release assets](https://github.com/cloud-hero/linux-hardening-toolkit/releases/tag/lh-1.4): complete ZIP, assessment PDF, prompt and checksums.
+From [CloudHero](https://cloudhero.io/). [Get the LH-1.5 release](https://github.com/cloud-hero/linux-hardening-toolkit/releases/tag/lh-1.5) for the six-step assessment workflow and collector validated on four Linux distributions.
 
-Control catalogue LH-1.2: seven areas and 28 controls, tested on Ubuntu 24.04 LTS ARM64. This workflow revision keeps the collection scripts and criteria unchanged. Commands require adaptation and validation on other platforms.
+Start with [the copy-and-paste quickstart](quickstart.md): prepare the workstation, clone or upload to the server, collect with sudo, copy the report with SCP, redact it into an isolated review folder, run the full prompt and validate the report structure.
 
-## Choose your task
+## Tested scope
 
-- **Assess an existing server:** follow [assessment guide](linux-server-hardening-guide.md) (or the [assessment PDF](linux-server-hardening-guide.pdf)) and the four steps below. No package installation, service restart, firewall change or new baseline is required to begin. Unavailable observations remain visible.
-- **Apply approved fixes:** use the [hardening runbook](hardening-runbook.md) after assessment and change approval. Its commands can change the target.
-- **Reproduce our tests:** use the [lab reproduction guide](lab-guide.md) only for a disposable VM. Lab provisioning and software regression tests are optional maintainer work, not assessment prerequisites.
+The observational collector was exercised on official x86_64 EC2 images on 5 November 2026: Ubuntu 24.04.5 LTS, Debian 13.7, Fedora 44 Cloud and Amazon Linux 2023.12. It uses APT or DNF/DNF5 according to the installed package manager and queries available host-firewall tools. This does not validate every version or custom image of those distributions.
 
-## Required workflow: server collection, workstation analysis
+The fixed LH-1.2 catalogue still contains 28 controls. Collection success is not a control PASS. Missing tools, metadata, approved policy and production evidence remain visible. Amazon Linux 2023's repository version pin is reported separately from current vendor security coverage.
 
-**Run the collector yourself on the Linux server. Run the assessment prompt on a different machine against a redacted copy of the report.** The prompt must not download or execute collectors, connect to the server, request SSH/sudo access or inspect the analysis workstation. The scripts collect facts and run specific deterministic checks; they are not a complete deterministic 28-control assessor.
+DNF can create cache files even when asked to use cached metadata only. The collector copies existing metadata into private scratch storage and redirects DNF cache, log and persistent working paths there. The copy excludes downloaded RPMs and is removed after collection. It does not refresh repositories, install packages or apply fixes. Normal SSH/sudo access can still create logs.
 
-### 1. Collect on the approved Linux server
+## Separate tasks
 
-Obtain and extract the toolkit, complete the policy and review `assess.sh` and `collect-report.sh`. From a private directory containing the reviewed scripts on the approved target, run:
+- [Assessment guide](linux-server-hardening-guide.md): assess existing evidence on a separate workstation.
+- [Hardening runbook](hardening-runbook.md): separately approved changes; its modifying examples retain their original Ubuntu lab scope.
+- [Historical lab guide](lab-guide.md): optional Ubuntu ARM64 reproduction, not an assessment prerequisite.
+- [EC2 collection validation](ec2-validation.md): scope and results of the four-distribution collector tests.
+- [Vulnerability context](vulnerability-context.md): optional workstation-only Zero Wire/CISA lookup. Absence from a feed is not evidence of safety.
 
-```bash
-# SERVER: the authorized operator runs this command.
-bash collect-report.sh ./assess.sh
-```
+The original `linux-server-hardening-guide.pdf` is the retained LH-1.4 PDF. Use this revision's Markdown quickstart and guide for the new workflow; the PDF is historical and does not describe the four-distribution collector. No PDF is added to the CloudHero website deployment.
 
-The wrapper uses the operator's approved sudo access where required. It creates a new `0700` directory and `0600` report at `linux-assessment.XXXXXXXX/assessment.txt`, prints the actual path and preserves failed-collection evidence and exit status. The collector does not install packages, refresh metadata, change configuration or restart services. Normal access can create logs. Neither script applies hardening fixes.
+## Assessment inputs and outputs
 
-### 2. Redact and transfer
+Open only the quickstart's `review` folder in the approved AI environment. Its six inputs are the redacted assessment, completed policy, target context, full prompt, catalogue and report template. Keep the private original and server credentials outside that workspace. Enforce file access and execution restrictions in the tool; prompt instructions alone are not a sandbox.
 
-Keep the original private on the server. Review a separate copy, remove data your policy does not permit sharing and transfer the approved redacted report to a different machine using your established secure transfer method. Keep the same target alias across the evidence and policy. Preserve UTC collection times, exit statuses and facts needed for the assessment; record redactions that limit conclusions.
+The model produces `output/assessment.md` and `output/report.json`. An operator runs `check-report.py` to validate the structure, then reviews the evidence and proposed fixes. The collector never runs the AI prompt or sends evidence to a model.
 
-Bring the completed `policy-template.json`, workload role/environment and approved supporting evidence. Do not transfer SSH keys, passwords, tokens or unrestricted logs. Approve the AI service and its processing/retention arrangements: using a cloud model from a workstation still sends the supplied evidence to that service.
+## Maintenance
 
-### Optional: add current vulnerability context
+Run `python3 scripts/validate-toolkit.py` on a Python 3.10+ workstation. The root-only wrapper fixtures must also run on a disposable test server. Changes to collector behaviour require fresh server evidence; historical tests cannot be relabelled as a new run.
 
-Cloudflare [announced Zero Wire on 3 November 2026](https://developers.cloudflare.com/changelog/post/2026-11-03-radar-zero-wire/). Its curated briefings can help identify relevant investigations. An operator can fetch public Zero Wire and CISA KEV context on the analysis workstation with Python 3.10+:
+`baseline-paths.json` now includes APT/UFW and DNF/firewalld/nftables/SELinux policy locations. It is a starting scope for an approved baseline, not permission to create or replace one during assessment. Existing installed scopes/manifests must be reviewed independently.
 
-```sh
-# WORKSTATION ONLY: no server report is read or uploaded.
-python3 vulnerability-context.py fetch --output-dir ./intel-run-001
-```
-
-Use a new directory for every run and supply `intel-run-001/context.json` alongside redacted evidence. Exit 0 means sources parsed; 1 means explicit source gaps; 2 means snapshot/output validation failed. No outcome means the server is secure. The helper preserves dates and checksums and omits embedded agent prompts. It does not follow vendor links or determine target applicability.
-
-Follow [vulnerability-context.md](vulnerability-context.md) for offline snapshot replay and the public-advisory permission handoff. Public advisory browsing defaults to offline; explicitly allow it when wanted, using only public CVE/product terms. Verify exact affected/fixed vendor revisions and active software state. Missing observations remain unknown. Keep all 28 controls and add a dated, unscored vulnerability appendix. A missing feed entry or KEV listing is not proof of safety.
-
-### 3. Run the prompt on the analysis workstation
-
-Open your approved Claude or Codex environment on the separate machine. Supply the full `linux-assessment-prompt.txt`, the redacted report, completed policy, target context and optional `context.json` plus vendor receipts. Give access only to the approved evidence and output area; keep server credentials and production execution access out of the analysis environment. Explicitly include this instruction alongside the full prompt:
-
-```text
-Assess only the server described in the attached redacted evidence.
-Required mode: operator collection on the server; AI analysis here.
-This is a separate analysis workstation, not the assessment target.
-Do not download or execute scripts, connect to the server,
-request SSH/sudo access, or inspect this workstation.
-Use the supplied policy and collection timestamps.
-If evidence is missing, request it from the operator; never guess PASS.
-Produce the 28-control report and proposed fixes only. Do not remediate.
-```
-
-If no report is supplied, the prompt asks the operator to collect, redact and transfer it first. It must not switch to live collection. For missing observations, the model can propose read commands for the operator to review and run on the server, then analyse the returned redacted receipts. Missing or stale evidence cannot create a PASS. The report describes the supplied collection times; it is not a new live scan.
-
-### 4. Review and validate the report
-
-Require a Markdown assessment and `report.json` with exactly the 28 IDs from `controls.json`, in order. On the analysis workstation, the operator may check its structure:
-
-```bash
-# WORKSTATION: report validation only; no server collection.
-python3 check-report.py --catalog controls.json report.json
-```
-
-Review the findings before approving remediation as a separate task. Repeat server collection and workstation analysis after changes. Start with the PDF or Markdown guide and `adoption-brief.md`; `worked-change-example.md` illustrates the change decision.
-
-The validator rejects missing/duplicate IDs, unsupported PASS entries and unjustified N/A outcomes. It cannot determine whether evidence is true or sufficient. Evidence coverage is not a security score. The included worked lab report deliberately leaves production controls unresolved.
-
-`baseline.py` compares an explicit inventory of paths, types, permissions, ownership, symlink targets and file bytes. Review the tool, scope and independently trusted manifest before use. `create` is a separately authorized change; an assessment runs `check` only. It is not an attestation against an attacker controlling root. Runtime/package drift needs separate evidence.
-
-`rsyslog-forwarding.conf.example` illustrates authenticated delivery with an explicit audit-file input and a bounded queue. Replace its placeholders and validate certificate permissions, input ownership, confinement and receiver policy in staging. The lab's receiver is a disposable test sink; production alert routing and acknowledgement are separate evidence.
-
-The ZIP includes dated lab transcripts under `evidence/` and test sources under `scripts/`. Follow `lab-guide.md` only when your task is reproducing those tests. The modifying `lab-*.sh` fixtures are exclusively for a disposable VM and must never be run on production. `lima.sh` expects official Lima binaries at `.lab/tools/bin/limactl`; the pinned image and VM settings are in `lab.yaml`. See `lab-validation.txt` for what was and was not tested. The source hashes identify this edition, not a signed trust root.
-
-Use `cve-record.md` to add current vendor advisory and exact package/active-fix evidence to an individual CVE article. Do not treat the lab's dated versions as permanent recommendations.
-
-## Evidence and scope
-
-The dated VM evidence covers fresh SSH and rejected authentication, package/kernel upgrades and fallback, allowed/denied IPv4/IPv6 paths, Linux Audit, authenticated log delivery, reconciliation of 300 queued messages, drift detection and a synthetic workload rollback gate.
-
-The worked production catalogue remains **3 scoped PASS and 25 MANUAL**. Cloud/internet/container/UDP paths, human alert acknowledgement, actual business transactions, independent baseline provenance and organization policy still need their own evidence. This is a bounded baseline, not compliance certification. Other distributions and architectures require adaptation and validation.
-
-This repository contains the curated toolkit distribution. The local VM, keys, caches and website working directory are excluded. [Publication notes](PUBLICATION.md) explain the release and evidence provenance.
+Keep raw reports, keys and cloud resource inventories private and out of Git. Public validation summaries describe the exact tested scope without account IDs, instance addresses or raw server reports.
