@@ -6,7 +6,7 @@ root=Path(__file__).resolve().parents[1]
 with tempfile.TemporaryDirectory(prefix='guide-regression-') as temp:
     work=Path(temp)
     scope=json.loads((root/'content/baseline-paths.json').read_text())
-    directories={'/etc/ssh/sshd_config.d','/etc/apt','/etc/systemd/journald.conf.d','/etc/audit/rules.d','/etc/ufw','/etc/sudoers.d','/etc/rsyslog.d','/etc/systemd/system'}
+    directories={'/etc/ssh/sshd_config.d','/etc/apt','/etc/systemd/journald.conf.d','/etc/audit/rules.d','/etc/ufw','/etc/sudoers.d','/etc/rsyslog.d','/etc/systemd/system','/etc/dnf','/etc/yum.repos.d','/etc/firewalld','/etc/nftables','/etc/crypto-policies'}
     for name in scope:
         p=work/name.lstrip('/');p.parent.mkdir(parents=True,exist_ok=True)
         if name in directories:p.mkdir(exist_ok=True)
@@ -17,7 +17,7 @@ with tempfile.TemporaryDirectory(prefix='guide-regression-') as temp:
     def inventory(action):
         return subprocess.run([sys.executable,str(root/'scripts/baseline.py'),action,'--paths',str(paths),'--manifest',str(manifest)],capture_output=True,text=True)
     assert inventory('create').returncode==0
-    for name in ['/etc/apt/apt.conf.d/99-disable-updates','/etc/apt/sources.list.d/unapproved.sources','/etc/systemd/journald.conf.d/99-volatile.conf','/etc/ufw/before.rules','/etc/ufw/after6.rules','/etc/sudoers.d/unapproved','/etc/rsyslog.d/unapproved.conf']:
+    for name in ['/etc/apt/apt.conf.d/99-disable-updates','/etc/apt/sources.list.d/unapproved.sources','/etc/systemd/journald.conf.d/99-volatile.conf','/etc/ufw/before.rules','/etc/ufw/after6.rules','/etc/sudoers.d/unapproved','/etc/rsyslog.d/unapproved.conf','/etc/dnf/automatic.conf','/etc/yum.repos.d/unapproved.repo','/etc/firewalld/unapproved.xml','/etc/nftables/unapproved.nft','/etc/crypto-policies/unapproved.config']:
         p=work/name.lstrip('/');p.write_text('unapproved\n');result=inventory('check')
         assert result.returncode==1 and str(p) in result.stdout,(name,result.stdout,result.stderr)
         p.unlink();assert inventory('check').returncode==0

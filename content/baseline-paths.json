@@ -12,5 +12,12 @@
   "/etc/sudoers.d",
   "/etc/rsyslog.conf",
   "/etc/rsyslog.d",
-  "/etc/systemd/system"
+  "/etc/systemd/system",
+  "/etc/dnf",
+  "/etc/yum.repos.d",
+  "/etc/firewalld",
+  "/etc/nftables",
+  "/etc/sysconfig/nftables.conf",
+  "/etc/selinux/config",
+  "/etc/crypto-policies"
 ]
