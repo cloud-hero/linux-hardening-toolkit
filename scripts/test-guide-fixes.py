@@ -24,7 +24,7 @@ with tempfile.TemporaryDirectory(prefix='guide-regression-') as temp:
         print('PASS | added override detected and restoration clean: '+name)
     p=work/'etc/default/ufw';p.write_text('changed\n')
     assert inventory('check').returncode==1;print('PASS | firewall defaults drift detected')
-    guide=(root/'content/guide.md').read_text()
+    guide=(root/'content/hardening-runbook.md').read_text()
     pattern=re.search(r"sudo grep -nE '([^']+)' /boot/grub/grub.cfg",guide).group(1)
     fixture="menuentry 'Ubuntu' {\n linux /boot/new\n}\nsubmenu 'Advanced' {\n  menuentry 'Old kernel' {\n    linux /boot/old\n  }\n}\n"
     result=subprocess.run(['grep','-nE',pattern],input=fixture,capture_output=True,text=True)
