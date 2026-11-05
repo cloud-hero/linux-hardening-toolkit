@@ -9,12 +9,12 @@ import subprocess
 import sys
 
 root = Path(__file__).resolve().parents[1]
-for name in ('assess.sh', 'collect-report.sh', 'baseline.py', 'check-report.py'):
+for name in ('assess.sh', 'collect-report.sh', 'baseline.py', 'check-report.py', 'vulnerability-context.py'):
     assert (root/name).read_bytes() == (root/'scripts'/name).read_bytes(), name
 for name in ('controls.json', 'baseline-paths.json'):
     assert (root/name).read_bytes() == (root/'content'/name).read_bytes(), name
 assert (root/'linux-server-hardening-guide.md').read_text() == (root/'content/guide.md').read_text().replace('](../', '](')
-for name in ('test-baseline.py', 'test-report.py', 'test-guide-fixes.py'):
+for name in ('test-baseline.py', 'test-report.py', 'test-guide-fixes.py', 'test-vulnerability-context.py'):
     subprocess.run([sys.executable, str(root/'scripts'/name)], check=True)
 catalog = json.loads((root/'controls.json').read_text())
 ids = [c['id'] for c in catalog['controls']]

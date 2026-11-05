@@ -2,7 +2,7 @@
 
 **Optional maintainer task. Do not follow this guide to assess a production server.** It provisions and changes a disposable Ubuntu VM to reproduce implementation tests. An assessment uses `linux-server-hardening-guide.md`; approved real-server fixes use `hardening-runbook.md`. Neither task requires reproducing this lab.
 
-Toolkit LH-1.3; control catalogue LH-1.2. Historical receipts were captured on 3-4 November 2026 with Ubuntu 24.04.5 LTS ARM64, Lima 2.2.1 and Apple Virtualization Framework. The scripts and pinned image remain that tested snapshot. A new run must record its own versions, timestamps and outcomes; it cannot inherit the old PASS labels.
+Toolkit LH-1.4; control catalogue LH-1.2. Historical receipts were captured on 3-4 November 2026 with Ubuntu 24.04.5 LTS ARM64, Lima 2.2.1 and Apple Virtualization Framework. The scripts and pinned image remain that tested snapshot. A new run must record its own versions, timestamps and outcomes; it cannot inherit the old PASS labels.
 
 ## Host requirements and isolation
 
@@ -100,7 +100,10 @@ Python 3.10+ and Bash are sufficient for the fixture suites. These create tempor
 python3 scripts/test-baseline.py
 python3 scripts/test-report.py
 python3 scripts/test-guide-fixes.py
+python3 scripts/test-vulnerability-context.py
 ```
+
+The vulnerability-context fixtures test public-feed parsing, offline replay, missing-source handling and input/output boundaries without network access. The public-feed helper is an optional workstation operation, not a lab or production provisioning step.
 
 The public repository also provides `python3 scripts/validate-toolkit.py` to run these suites and check package integrity. Root-specific assertions are skipped on an ordinary workstation. To repeat them, copy the relevant scripts and content files into the disposable guest and run the regression there as root. The original VM receipts are retained; a local skipped assertion is not a new VM PASS.
 

@@ -15,3 +15,5 @@ linux-assessment.*/
 /report.json
 /report.md
 /tmp/
+/intel-run-*/
+/context-offline.json
