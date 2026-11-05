@@ -403,4 +403,3 @@ In the companion's synthetic application, release A passes a representative tran
 **Expected:** VERIFY-01 has complete criteria and owners; VERIFY-02 has successful OS/access checks; VERIFY-03 has real workload results within thresholds; VERIFY-04 has an explicit proceed/hold/rollback decision. A test command that exits successfully but returns the wrong semantic result fails the gate. Collect failed-unit names and `dpkg --audit` output, not just their command exit statuses.
 
 **Stop and recover:** abort on loss of management access, unexpected public exposure, missing logs, failed representative work or breached acceptance thresholds. Do not advance another batch while the failed gate is unresolved. Restore the tested state, repeat the same acceptance tests and record whether the vulnerability is reintroduced. A rollback that restores uptime but loses required data is not a successful recovery.
-
