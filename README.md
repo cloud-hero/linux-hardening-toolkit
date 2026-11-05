@@ -1,15 +1,14 @@
-# Linux Hardening Toolkit
+# Linux hardening assessment toolkit · LH-1.3
 
-A reusable Linux server hardening guide and evidence-first assessment toolkit from [CloudHero](https://cloudhero.io/).
+From [CloudHero](https://cloudhero.io/). [Get the LH-1.3 release assets](https://github.com/cloud-hero/linux-hardening-toolkit/releases/tag/lh-1.3): complete ZIP, assessment PDF, prompt and checksums.
 
-**Toolkit LH-1.2.1 · control catalogue LH-1.2 · seven areas · 28 controls.** Collection and remediation examples were tested on Ubuntu 24.04 LTS ARM64. This documentation/prompt revision does not change the collector or the control criteria.
+Control catalogue LH-1.2: seven areas and 28 controls, tested on Ubuntu 24.04 LTS ARM64. This workflow revision keeps the collection scripts and criteria unchanged. Commands require adaptation and validation on other platforms.
 
-## Start here
+## Choose your task
 
-- [GitHub release assets](https://github.com/cloud-hero/linux-hardening-toolkit/releases/tag/lh-1.2.1): complete ZIP, PDF, assessment prompt and checksums.
-- [Read the guide](linux-server-hardening-guide.md) and [full assessment prompt](linux-assessment-prompt.txt).
-- [Review the adoption brief](adoption-brief.md) and [completed fictional change](worked-change-example.md).
-- [Inspect the controls](controls.json), [worked lab report](lab-assessment-report.md) and [dated test record](lab-validation.txt).
+- **Assess an existing server:** follow [assessment guide](linux-server-hardening-guide.md) (or the [assessment PDF](linux-server-hardening-guide.pdf)) and the four steps below. No package installation, service restart, firewall change or new baseline is required to begin. Unavailable observations remain visible.
+- **Apply approved fixes:** use the [hardening runbook](hardening-runbook.md) after assessment and change approval. Its commands can change the target.
+- **Reproduce our tests:** use the [lab reproduction guide](lab-guide.md) only for a disposable VM. Lab provisioning and software regression tests are optional maintainer work, not assessment prerequisites.
 
 ## Required workflow: server collection, workstation analysis
 
@@ -66,21 +65,13 @@ The validator rejects missing/duplicate IDs, unsupported PASS entries and unjust
 
 `rsyslog-forwarding.conf.example` illustrates authenticated delivery with an explicit audit-file input and a bounded queue. Replace its placeholders and validate certificate permissions, input ownership, confinement and receiver policy in staging. The lab's receiver is a disposable test sink; production alert routing and acknowledgement are separate evidence.
 
-The ZIP includes dated lab transcripts under `evidence/` and test sources under `scripts/`. The modifying `lab-*.sh` fixtures are exclusively for a disposable VM and must never be run on production. `lima.sh` expects official Lima binaries at `.lab/tools/bin/limactl`; the pinned image and VM settings are in `lab.yaml`. See `lab-validation.txt` for what was and was not tested. The source hashes identify this edition, not a signed trust root.
+The ZIP includes dated lab transcripts under `evidence/` and test sources under `scripts/`. Follow `lab-guide.md` only when your task is reproducing those tests. The modifying `lab-*.sh` fixtures are exclusively for a disposable VM and must never be run on production. `lima.sh` expects official Lima binaries at `.lab/tools/bin/limactl`; the pinned image and VM settings are in `lab.yaml`. See `lab-validation.txt` for what was and was not tested. The source hashes identify this edition, not a signed trust root.
 
 Use `cve-record.md` to add current vendor advisory and exact package/active-fix evidence to an individual CVE article. Do not treat the lab's dated versions as permanent recommendations.
 
-## Validate this toolkit
+## Optional maintainer validation
 
-Python 3.10+ and Bash are sufficient for the fixture tests; no third-party Python packages are required. An operator can run these local fixtures separately from the AI assessment:
-
-```bash
-python3 scripts/validate-toolkit.py
-```
-
-The suite checks inventory behavior, report structure, distributed copies, the fixed control contract, evidence references and publication checksums. Root-specific capture assertions run only when intentionally executed as root in a disposable environment; normal workstation runs report that case as skipped. Prior real-VM evidence includes those assertions. These local tests do not perform a production assessment.
-
-The original Lima fixtures use the lab user `andrei`; adapt the SSH context for your own disposable VM. The tested VM had no host-directory mounts. Collection, comparison and report-validation tools are distinct from the modifying `scripts/lab-*` fixtures.
+Follow the [lab guide](lab-guide.md#local-software-regression-tests) for local software regression and disposable-VM reproduction. These are not steps for collecting a server assessment.
 
 ## Evidence and scope
 

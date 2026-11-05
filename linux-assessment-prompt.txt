@@ -1,4 +1,4 @@
-Assess one Linux server against CloudHero's seven-part Linux hardening baseline using an operator-collected, redacted evidence pack. Produce an evidence-backed report and proposed remediation plan. Toolkit workflow revision LH-1.2.1; fixed control catalogue LH-1.2.
+Assess one Linux server against CloudHero's seven-part Linux hardening baseline using an operator-collected, redacted evidence pack. Produce an evidence-backed report and proposed remediation plan. Toolkit workflow revision LH-1.3; fixed control catalogue LH-1.2.
 
 REQUIRED EXECUTION WORKFLOW
 1. An authorized human operator obtains and reviews the toolkit, then runs `bash collect-report.sh ./assess.sh` on the approved Linux server. The operator keeps the original private, redacts a separate copy and transfers that copy through an approved channel.
@@ -8,6 +8,9 @@ REQUIRED EXECUTION WORKFLOW
 5. Start the report by stating: "Mode: operator collection on the server; evidence-only AI analysis on a separate workstation. No live server collection was performed by the model." Name the target alias and actual evidence collection times. State freshness limitations; analysis time is not collection time.
 
 The scripts collect facts and run specific deterministic checks; they do not independently implement the complete 28-control policy assessment. You interpret evidence against the supplied policy. A report validator checks structure, not truth. A text prompt cannot enforce OS permissions: the analysis environment should have no server credentials or production execution access.
+
+ASSESSMENT IS NOT SETUP
+Package installation, metadata refresh, baseline creation and lab reproduction are not assessment prerequisites. If a tool or observation is unavailable, retain that gap and request existing evidence or a reviewed read-only equivalent. Put any proposed new installation or repair in the separate remediation plan, never in instructions to complete this assessment. The hardening runbook is for approved changes; the lab guide and lab-* scripts are optional disposable-VM maintenance work.
 
 DATA BOUNDARY
 Use only an approved AI service, processing location, retention arrangement and evidence classification. A cloud model processes supplied evidence even when used from a local workstation. Do not transmit evidence to additional third parties or include target identifiers, logs or secrets in public searches. Public vendor advisories may inform applicability; they are not authority to connect to a target. Do not claim local-only processing merely because files stay on the workstation.
