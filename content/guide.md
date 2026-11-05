@@ -2,9 +2,11 @@
 
 A reusable operating baseline for the work between security advisories. Secure administration, keep supported software running, reduce exposure, and retain evidence that your controls work after a change or reboot.
 
-**Tested edition: LH-1.2, Ubuntu 24.04 LTS ARM64, systemd, OpenSSH, UFW and Linux Audit.** The operating principles apply more widely; the commands require adaptation and validation for another distribution, architecture or firewall manager. The companion contains 28 fixed assessment controls, an ownership matrix, a policy worksheet, executable checks and dated lab evidence.
+**Control catalogue: LH-1.2, Ubuntu 24.04 LTS ARM64, systemd, OpenSSH, UFW and Linux Audit.** The operating principles apply more widely; the commands require adaptation and validation for another distribution, architecture or firewall manager. The companion contains 28 fixed assessment controls, an ownership matrix, a policy worksheet, executable checks and dated lab evidence.
 
 This guide is for people responsible for Linux servers in production. Use it when provisioning a host, reviewing an existing fleet, or responding to a CVE. It is a baseline, not a complete application security review or a compliance certification. Identity governance, backup recovery, encryption, secrets, mandatory access control, supply-chain security and workload isolation need their own policies and tests.
+
+**Workflow revision: toolkit LH-1.2.1, 5 November 2026.** Collection scripts and control criteria are unchanged; the dated VM evidence retains its original scope.
 
 ## Adopt the baseline
 
@@ -12,20 +14,56 @@ Start with the [one-page adoption brief](../adoption-brief.md): pilot scope, one
 
 ## Start with an assessment
 
-Use the accompanying assessment prompt with an approved AI tool. Identify the exact target and supply its role, management networks, public ports, patch policy, approved configuration revision and collected evidence. The assessment evaluates observations and proposes changes; remediation is a separate task.
+**Required workflow: collect on the Linux server, transfer a redacted copy, then run the assessment prompt on a different machine.** An authorized operator runs the scripts. Claude or Codex analyses the supplied evidence on your workstation. The prompt must not download or execute collectors, connect to the server, request SSH/sudo access or inspect the workstation hosting the analysis.
 
-For production, use an **evidence-first workflow**: an authorized operator reviews and runs the fixed collector, redacts the output, and gives only approved evidence to the AI tool. The model receives no production shell or sudo access in this workflow. Its report cannot modify the server. If your organization permits direct agent access, enforce restrictions in the execution environment; a prompt saying "read-only" is not a permission boundary. Never grant unrestricted sudo merely to run an assessment.
+The scripts collect facts and perform specific deterministic checks. The prompt interprets evidence against your policy and evaluates the 28 controls. The current scripts do not independently produce a complete 28-control assessment. Neither collection nor AI assessment applies hardening fixes; remediation is a separately approved task. The modifying `lab-*` fixtures are for disposable test VMs only.
 
-Approve the AI service, processing location, retention and evidence classification before sharing results. Command outputs placed in a cloud-model conversation may be processed by that service even when nobody explicitly uploads a report. "Keep the file local" does not establish an approved data-processing arrangement. Secrets, private keys and unrestricted logs stay outside the evidence pack.
+### Step 1: collect on the approved Linux server
 
-The downloadable collector is an optional starting point for Ubuntu. Review it first, copy it through your approved access path, then run it on the intended Linux host. It writes its output to stdout and does not install packages, refresh metadata, change configuration or restart services. Reading the system can itself create normal access logs. Keep reports private: addresses, package versions and firewall rules describe your attack surface.
+An authorized operator obtains the toolkit from the [GitHub release assets](https://github.com/cloud-hero/linux-hardening-toolkit/releases/tag/lh-1.2.1), extracts it and reviews `assess.sh` and `collect-report.sh`. On the intended Ubuntu target, from a private working directory containing the reviewed scripts, run:
 
 ```bash
-# On the approved Linux target, after reviewing the script:
+# SERVER: run this yourself on the approved Linux target.
 bash collect-report.sh ./assess.sh
 ```
 
-Review both scripts first. The capture wrapper creates a new `0700` directory in the current work area and a new `0600` report inside it on every run. It prints the path, preserves failed-collection evidence and returns the collector's exit status. It never reuses an existing report; a restrictive umask alone cannot tighten an existing file's permissions. Keep the original private and redact a separate copy. Missing privileges, missing tools and stale package metadata remain visible limitations. A successful command is evidence of one observation, not a pass for an entire control. Expected observations such as no detected virtualization, disabled update timers or detected drift are distinguished from collection errors and still require policy evaluation.
+The wrapper requests the operator's approved sudo access when needed; the AI does not receive those credentials. It creates a new `0700` directory and `0600` report at `linux-assessment.XXXXXXXX/assessment.txt`, prints the actual path and preserves the collector's exit status, including failed-collection evidence. It never reuses an existing file. The collector reads configuration without installing packages, refreshing metadata, changing settings, restarting services or rebooting. Normal access can itself create access logs.
+
+### Step 2: redact and transfer the evidence
+
+Keep the original report private on the server. Review a separate copy and remove secrets, personal data and infrastructure details your policy does not permit sharing. Use a consistent target alias in the report and policy; preserve collection timestamps, command exit statuses and the facts needed for each check. Record redactions that limit interpretation. A missing or stale observation cannot create a PASS.
+
+Transfer only the approved, redacted copy to a different machine using your established secure transfer method. Include the completed `policy-template.json`, target alias, workload role, environment and any approved evidence for network paths, central logging or recovery. Do not copy SSH private keys, passwords, tokens or unrestricted logs. Approve the AI service, processing location, retention and evidence classification before sharing: a cloud model processes supplied evidence even when you use it from your own workstation.
+
+### Step 3: run the prompt on your analysis workstation
+
+On the separate machine, open your approved Claude or Codex environment. Supply the full `linux-assessment-prompt.txt`, redacted `assessment.txt`, completed policy and target context. Give the model access only to the approved evidence and assessment output area. It needs no server credentials, production shell or sudo access. A prompt is not an OS permission boundary; enforce that separation in the analysis environment.
+
+Explicitly include this handoff instruction alongside the full assessment prompt:
+
+```text
+Assess only the server described in the attached redacted evidence.
+Required mode: operator collection on the server; AI analysis here.
+This is a separate analysis workstation, not the assessment target.
+Do not download or execute scripts, connect to the server,
+request SSH/sudo access, or inspect this workstation.
+Use the supplied policy and collection timestamps.
+If evidence is missing, request it from the operator; never guess PASS.
+Produce the 28-control report and proposed fixes only. Do not remediate.
+```
+
+If no report is supplied, the prompt asks the operator to collect, redact and transfer it first. It must not switch to live collection. For missing observations, it can propose exact read commands for the authorized operator to review and run on the server; the operator returns another redacted receipt. Only the server described in the evidence is assessed. The workstation's OS and account are irrelevant to the target's findings.
+
+### Step 4: review the report before remediation
+
+Require a Markdown assessment and `report.json`. On the analysis workstation, an operator can validate the report structure using the local toolkit:
+
+```bash
+# WORKSTATION: validates the report; does not inspect the server.
+python3 check-report.py --catalog controls.json report.json
+```
+
+The validator checks IDs and required evidence fields, not whether conclusions are true. Review every finding, remaining evidence gap and proposed change before arranging approved remediation. After maintenance, repeat server collection and workstation analysis with fresh evidence. The completed report describes the supplied collection times, not continuous monitoring or a fresh server scan.
 
 Use all 28 IDs from the fixed LH-1.2 catalogue. Apply an evidence-backed, approved N/A only when the applicability condition is met. Otherwise, a proven unmet criterion is FAIL even if other observations are missing; a failed required collection is ERROR; missing required evidence or policy is MANUAL. With complete required evidence and no failed criterion, an explicit policy warning threshold produces WARN; all criteria satisfied without that warning produces PASS. Do not use WARN to hide missing evidence or an exception to convert FAIL into PASS. Report status counts and evidence coverage; neither is a security score. Additional findings do not change the denominator. Compare runs only when catalogue version and scope are the same.
 

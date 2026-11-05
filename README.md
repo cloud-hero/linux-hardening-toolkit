@@ -2,60 +2,63 @@
 
 A reusable Linux server hardening guide and evidence-first assessment toolkit from [CloudHero](https://cloudhero.io/).
 
-**LH-1.2 · seven areas · 28 fixed controls · tested on Ubuntu 24.04 LTS ARM64.**
-
-Covers SSH, patch management, kernel lifecycle, firewall exposure, audit logging, configuration drift and production verification. Use it when provisioning a server, reviewing an existing fleet or adding operational context to a CVE article.
+**Toolkit LH-1.2.1 · control catalogue LH-1.2 · seven areas · 28 controls.** Collection and remediation examples were tested on Ubuntu 24.04 LTS ARM64. This documentation/prompt revision does not change the collector or the control criteria.
 
 ## Start here
 
-- [Read the guide](linux-server-hardening-guide.md) or [download the PDF](https://github.com/cloud-hero/linux-hardening-toolkit/releases/latest/download/linux-server-hardening-guide.pdf).
-- [Download the complete toolkit ZIP](https://github.com/cloud-hero/linux-hardening-toolkit/releases/latest/download/linux-hardening-toolkit.zip).
-- [Copy the assessment prompt](linux-assessment-prompt.txt).
+- [GitHub release assets](https://github.com/cloud-hero/linux-hardening-toolkit/releases/tag/lh-1.2.1): complete ZIP, PDF, assessment prompt and checksums.
+- [Read the guide](linux-server-hardening-guide.md) and [full assessment prompt](linux-assessment-prompt.txt).
 - [Review the adoption brief](adoption-brief.md) and [completed fictional change](worked-change-example.md).
-- [Inspect the 28 controls](controls.json), [worked lab report](lab-assessment-report.md) and [dated test record](lab-validation.txt).
+- [Inspect the controls](controls.json), [worked lab report](lab-assessment-report.md) and [dated test record](lab-validation.txt).
 
-## Run an assessment
+## Required workflow: server collection, workstation analysis
 
-The default workflow gives the AI tool an operator-collected, redacted evidence pack. It does not give the model production shell or sudo access. Complete the policy worksheet and review the scripts before running them on an approved target.
+**Run the collector yourself on the Linux server. Run the assessment prompt on a different machine against a redacted copy of the report.** The prompt must not download or execute collectors, connect to the server, request SSH/sudo access or inspect the analysis workstation. The scripts collect facts and run specific deterministic checks; they are not a complete deterministic 28-control assessor.
+
+### 1. Collect on the approved Linux server
+
+Obtain and extract the toolkit, complete the policy and review `assess.sh` and `collect-report.sh`. From a private directory containing the reviewed scripts on the approved target, run:
 
 ```bash
-# On the approved Ubuntu target, from the extracted toolkit directory:
+# SERVER: the authorized operator runs this command.
 bash collect-report.sh ./assess.sh
 ```
 
-Every capture creates a new mode-0700 directory and mode-0600 report. Keep the original private, redact a separate copy and share only approved evidence with the assessment prompt. Collection success is not a security PASS. Remediation is a separate approved task.
+The wrapper uses the operator's approved sudo access where required. It creates a new `0700` directory and `0600` report at `linux-assessment.XXXXXXXX/assessment.txt`, prints the actual path and preserves failed-collection evidence and exit status. The collector does not install packages, refresh metadata, change configuration or restart services. Normal access can create logs. Neither script applies hardening fixes.
 
-## Validate this toolkit
+### 2. Redact and transfer
 
-Python 3.10+ and Bash are sufficient for the fixture tests; no third-party Python packages are required.
+Keep the original private on the server. Review a separate copy, remove data your policy does not permit sharing and transfer the approved redacted report to a different machine using your established secure transfer method. Keep the same target alias across the evidence and policy. Preserve UTC collection times, exit statuses and facts needed for the assessment; record redactions that limit conclusions.
+
+Bring the completed `policy-template.json`, workload role/environment and approved supporting evidence. Do not transfer SSH keys, passwords, tokens or unrestricted logs. Approve the AI service and its processing/retention arrangements: using a cloud model from a workstation still sends the supplied evidence to that service.
+
+### 3. Run the prompt on the analysis workstation
+
+Open your approved Claude or Codex environment on the separate machine. Supply the full `linux-assessment-prompt.txt`, the redacted report, completed policy and target context. Give access only to the approved evidence and output area; keep server credentials and production execution access out of the analysis environment. Explicitly include this instruction alongside the full prompt:
+
+```text
+Assess only the server described in the attached redacted evidence.
+Required mode: operator collection on the server; AI analysis here.
+This is a separate analysis workstation, not the assessment target.
+Do not download or execute scripts, connect to the server,
+request SSH/sudo access, or inspect this workstation.
+Use the supplied policy and collection timestamps.
+If evidence is missing, request it from the operator; never guess PASS.
+Produce the 28-control report and proposed fixes only. Do not remediate.
+```
+
+If no report is supplied, the prompt asks the operator to collect, redact and transfer it first. It must not switch to live collection. For missing observations, the model can propose read commands for the operator to review and run on the server, then analyse the returned redacted receipts. Missing or stale evidence cannot create a PASS. The report describes the supplied collection times; it is not a new live scan.
+
+### 4. Review and validate the report
+
+Require a Markdown assessment and `report.json` with exactly the 28 IDs from `controls.json`, in order. On the analysis workstation, the operator may check its structure:
 
 ```bash
-python3 scripts/validate-toolkit.py
-```
-
-This runs inventory, report-contract and review-regression tests, checks distributed copies, verifies the 28-control prompt/report contract and confirms referenced evidence exists. Local tests do not replace VM or production validation. Root-specific capture assertions run only when the suite is intentionally run as root in a disposable environment; ordinary local runs report that case as skipped. The existing real-VM results include those assertions.
-
-The `scripts/lab-*` fixtures change users, packages, firewall rules or logging configuration. They are for a disposable VM only. See [the lab record](lab-validation.txt) and [pinned Lima configuration](lab.yaml) before reproducing them. The original Lima fixtures use the lab user `andrei`; adapt the SSH context for your own disposable VM. The tested VM had no host-directory mounts.
-
-## Evidence and scope
-
-The dated VM evidence covers fresh SSH and rejected authentication, package/kernel upgrades and fallback, allowed/denied IPv4/IPv6 paths, Linux Audit, authenticated log delivery, reconciliation of 300 queued messages, drift detection and a synthetic workload rollback gate.
-
-The worked production catalogue remains **3 scoped PASS and 25 MANUAL**. Cloud/internet/container/UDP paths, human alert acknowledgement, actual business transactions, independent baseline provenance and organization policy still need their own evidence. This is a bounded baseline, not compliance certification. Other distributions and architectures require adaptation and validation.
-
-This repository contains the curated toolkit distribution. It excludes the local VM, keys, caches and website working directory. The PDF retains the reviewed edition's local-review label; publication does not expand its validation claims. [Publication notes](PUBLICATION.md) describe the source and checksum boundaries.
-
-## Toolkit workflow and files
-
-1. Complete `policy-template.json`, `change-worksheet.md` and `exposure-inventory.csv` with actual scope, owners, thresholds and deadlines. Example values are not your organization's policy.
-2. An authorized operator reviews `assess.sh` and `collect-report.sh`, then runs `bash collect-report.sh ./assess.sh` on the approved Linux target from a private work area. Each run creates a new private report directory; retain the original and redact a separate copy. The script does not install, refresh, repair or reboot. Missing permissions/tools remain visible; exit 1 reports collection errors, not a security score. Keep the original evidence private.
-3. Supply the approved evidence and completed policy to your approved AI service with `linux-assessment-prompt.txt`. The default workflow gives the model no production execution access. Confirm data-processing and retention terms before sharing output.
-4. Require exactly the IDs in `controls.json`, preserving order and version. Complete `report-template.json` alongside the Markdown assessment. A missing policy or required observation remains unresolved.
-5. Validate the report structure and recalculate evidence coverage:
-
-```sh
+# WORKSTATION: report validation only; no server collection.
 python3 check-report.py --catalog controls.json report.json
 ```
+
+Review the findings before approving remediation as a separate task. Repeat server collection and workstation analysis after changes. Start with the PDF or Markdown guide and `adoption-brief.md`; `worked-change-example.md` illustrates the change decision.
 
 The validator rejects missing/duplicate IDs, unsupported PASS entries and unjustified N/A outcomes. It cannot determine whether evidence is true or sufficient. Evidence coverage is not a security score. The included worked lab report deliberately leaves production controls unresolved.
 
@@ -66,3 +69,23 @@ The validator rejects missing/duplicate IDs, unsupported PASS entries and unjust
 The ZIP includes dated lab transcripts under `evidence/` and test sources under `scripts/`. The modifying `lab-*.sh` fixtures are exclusively for a disposable VM and must never be run on production. `lima.sh` expects official Lima binaries at `.lab/tools/bin/limactl`; the pinned image and VM settings are in `lab.yaml`. See `lab-validation.txt` for what was and was not tested. The source hashes identify this edition, not a signed trust root.
 
 Use `cve-record.md` to add current vendor advisory and exact package/active-fix evidence to an individual CVE article. Do not treat the lab's dated versions as permanent recommendations.
+
+## Validate this toolkit
+
+Python 3.10+ and Bash are sufficient for the fixture tests; no third-party Python packages are required. An operator can run these local fixtures separately from the AI assessment:
+
+```bash
+python3 scripts/validate-toolkit.py
+```
+
+The suite checks inventory behavior, report structure, distributed copies, the fixed control contract, evidence references and publication checksums. Root-specific capture assertions run only when intentionally executed as root in a disposable environment; normal workstation runs report that case as skipped. Prior real-VM evidence includes those assertions. These local tests do not perform a production assessment.
+
+The original Lima fixtures use the lab user `andrei`; adapt the SSH context for your own disposable VM. The tested VM had no host-directory mounts. Collection, comparison and report-validation tools are distinct from the modifying `scripts/lab-*` fixtures.
+
+## Evidence and scope
+
+The dated VM evidence covers fresh SSH and rejected authentication, package/kernel upgrades and fallback, allowed/denied IPv4/IPv6 paths, Linux Audit, authenticated log delivery, reconciliation of 300 queued messages, drift detection and a synthetic workload rollback gate.
+
+The worked production catalogue remains **3 scoped PASS and 25 MANUAL**. Cloud/internet/container/UDP paths, human alert acknowledgement, actual business transactions, independent baseline provenance and organization policy still need their own evidence. This is a bounded baseline, not compliance certification. Other distributions and architectures require adaptation and validation.
+
+This repository contains the curated toolkit distribution. The local VM, keys, caches and website working directory are excluded. [Publication notes](PUBLICATION.md) explain the release and evidence provenance.
